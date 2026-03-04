@@ -24,16 +24,16 @@ export default function RavelrySection({ initialData }: IProps) {
     return (
         <section>
             {/* 타이틀 */}
-            <h2 className="text-3xl mb-3 font-bold text-gray-800">ravelry 최신 도안 확인하기</h2>
+            <h2 className="text-3xl mb-3">ravelry 최신 도안 확인하기</h2>
 
             {/* 카테고리 버튼 */}
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-5">
                 {categories.map((el, idx) => (
                     <button
                         key={el.name}
                         onClick={() => setActiveTab(idx)} // 클릭 시 인덱스 변경
                         className={`
-              px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300
+              px-5 py-2 rounded-full  font-medium transition-all duration-300
               ${activeTab === idx ? 'bg-[#8FD3C3] text-white shadow-md scale-105' : 'bg-gray-100 text-gray-600 hover:bg-[#8FD3C3]/20'}
             `}
                     >
