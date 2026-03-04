@@ -28,7 +28,7 @@ export default function RootLayout({
             <body className={`p-5  ${geistSans.variable} ${geistMono.variable} antialiased`}>
                 <div className="border-3 w-full h-full bg-white">
                     <Header />
-                    <main className="border-t-3 p-10">{children}</main>
+                    <main className="border-t-3 p-10 overflow-y-auto">{children}</main>
                 </div>
             </body>
         </html>
