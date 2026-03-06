@@ -1,33 +1,40 @@
-import { firebaseApp } from '@/lib/firebase';
-import { getFirestore, doc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { db } from '@/lib/firebase';
+import { IRavelryPattern } from '@/types';
+import { doc, setDoc, serverTimestamp, deleteDoc } from 'firebase/firestore';
 
-export function RavelryCard({ pattern, activeTab }: { pattern: any; activeTab: number }) {
-    const firestore = getFirestore(firebaseApp);
-    const [isActive, setIsActive] = useState(false);
+export function RavelryCard({ pattern, activeTab, RavelryBookmarks }: { pattern: IRavelryPattern; activeTab: number; RavelryBookmarks: string[] }) {
+    const isActive = RavelryBookmarks.includes(String(pattern.id));
 
-    // pattern을 객체 분해가 아닌 그대로 받습니다.
-    const handlePinClick = async (patternData: any) => {
-        if (!patternData?.id) return;
+    const { user } = useAuth();
+
+    const handlePinClick = async (patternData: IRavelryPattern) => {
+        if (!user) {
+            window.alert('로그인 하셍요');
+            return;
+        }
+
+        const docRef = doc(db, 'RavelryBookmarks', user.uid, 'patterns', `${patternData.id}`);
 
         try {
-            await setDoc(doc(firestore, 'RavelryCard', String(patternData.id)), {
-                ravelry_id: patternData.id,
-                name: patternData.name,
-                image: patternData.first_photo?.medium_url || '',
-                link: patternData.permalink,
-                craft_type: activeTab === 0 ? '코바늘' : '대바늘',
-                createdAt: serverTimestamp(),
-            });
-            setIsActive(true);
-            // alert('찜 목록에 추가되었습니다!');
+            if (isActive) {
+                await deleteDoc(docRef);
+            } else {
+                await setDoc(docRef, {
+                    ravelry_id: patternData.id,
+                    name: patternData.name,
+                    image: patternData.first_photo?.medium_url || '',
+                    link: patternData.permalink,
+                    craft_type: activeTab === 0 ? 'crochet' : 'knitting',
+                    createdAt: serverTimestamp(),
+                });
+            }
         } catch (error) {
             console.error('Firestore 저장 실패:', error);
-            alert('저장에 실패했습니다.');
         }
     };
 
-    const handleCardClick = (permalink: string): void => {
+    const handleCardClick = (permalink: string) => {
         window.open(`https://www.ravelry.com/patterns/library/${permalink}`, '_blank');
     };
 
@@ -56,7 +63,7 @@ export function RavelryCard({ pattern, activeTab }: { pattern: any; activeTab: n
                     <button
                         className={`w-6 h-6 bg-[url('/images/icons/icon_pin.png')] bg-contain bg-center bg-no-repeat
                                    transition-transform duration-200 
-                                   ${isActive ? 'brightness-0 invert' : 'hover:scale-110'}`} // 찜 상태면 아이콘을 흰색으로 (필터 활용)
+                                   ${isActive ? 'brightness-0 invert' : 'hover:scale-110'}`}
                     />
                 </div>
             </div>

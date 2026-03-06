@@ -1,16 +1,12 @@
 'use client';
-
-import { useState } from 'react';
-import Link from 'next/link';
 import { RavelryCard } from '@/components/ui/ravelryCard';
 import { usePatterns } from '@/hooks/useRavelry';
-import { IRavelryPattern } from '@/types';
 import { useRavelryBookmarks } from '@/hooks/useRavelryBookmarks';
+import { IRavelryPattern } from '@/types';
+import { useState } from 'react';
 
-export default function RavelrySection() {
+export default function Ravelry() {
     const [activeTab, setActiveTab] = useState(0);
-
-    const { data: RavelryBookmarks = [] } = useRavelryBookmarks();
 
     const { data: crochet } = usePatterns('crochet');
     const { data: knitting } = usePatterns('knitting');
@@ -18,13 +14,11 @@ export default function RavelrySection() {
     const categories = [{ name: '코바늘' }, { name: '대바늘' }];
     const currentData = activeTab === 0 ? crochet : knitting;
 
+    const { data: RavelryBookmarks = [] } = useRavelryBookmarks();
+
     return (
         <section>
-            <div className="flex items-end gap-5 mb-3">
-                <h2 className="text-3xl">ravelry 최신 도안 확인하기</h2>
-                <Link href="/ravelry">더보기</Link>
-            </div>
-
+            <h2 className="text-3xl mb-3">ravelry 도안 살펴보기</h2>
             <div className="flex items-center gap-3 mb-5">
                 {categories.map((el, idx) => (
                     <button
@@ -39,7 +33,7 @@ export default function RavelrySection() {
             </div>
 
             <div className="flex items-center justify-around flex-wrap gap-6 w-full">
-                {currentData?.slice(0, 5).map((item: IRavelryPattern) => (
+                {currentData?.slice(0, 10).map((item: IRavelryPattern) => (
                     <RavelryCard RavelryBookmarks={RavelryBookmarks} key={item.id} pattern={item} activeTab={activeTab} />
                 ))}
             </div>

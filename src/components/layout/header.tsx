@@ -11,8 +11,16 @@ export default function Header() {
                 <h1 className="text-[25px]">
                     <Link href="/">Knitting Note</Link>
                 </h1>
-
-                <button onClick={handleLogin}>로그인</button>
+                {user ? (
+                    <div className="flex items-center gap-1">
+                        <p>{user.displayName} 님</p>
+                        <button className="text-sm" onClick={handleLogout}>
+                            로그아웃
+                        </button>
+                    </div>
+                ) : (
+                    <button onClick={handleLogin}>로그인</button>
+                )}
             </div>
         </header>
     );

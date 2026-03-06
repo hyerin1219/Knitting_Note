@@ -1,5 +1,7 @@
 export interface IRavelry {}
 
+// Ravelry API 관련 type
+
 // 디자이너 정보
 interface IDesigner {
     id: number;
@@ -29,7 +31,7 @@ interface IPhoto {
 }
 
 // 패턴 데이터
-interface IRavelryPattern {
+export interface IRavelryPattern {
     id: number;
     name: string;
     permalink: string;

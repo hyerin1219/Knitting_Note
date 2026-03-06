@@ -1,17 +1,10 @@
 import RavelrySection from './RavelrySection';
 
-interface IProps {
-    initialData: {
-        crochet: any[];
-        knitting: any[];
-    };
-}
-
-export default function Main({ initialData }: IProps) {
+export default function Main() {
     return (
         <div>
             {/* Ravelry 최신 도안 */}
-            <RavelrySection initialData={initialData} />
+            <RavelrySection />
 
             {/* Knitting Note 최신 도안 */}
             <div></div>
