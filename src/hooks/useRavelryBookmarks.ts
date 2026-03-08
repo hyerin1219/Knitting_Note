@@ -14,6 +14,6 @@ export function useRavelryBookmarks() {
 
             return snapshot.docs.map((doc) => doc.id);
         },
-        staleTime: 1000 * 60 * 10,
+        staleTime: 1000 * 60 * 60, //한 시간
     });
 }

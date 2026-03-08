@@ -14,6 +14,6 @@ export function usePatterns(craft: 'crochet' | 'knitting', enabled = true) {
             return data.patterns;
         },
         enabled,
-        staleTime: 1000 * 60 * 10, // 1시간 캐싱
+        staleTime: 1000 * 60 * 60, // 1시간 캐싱
     });
 }

@@ -2,15 +2,16 @@ import { useAuth } from '@/hooks/useAuth';
 import { db } from '@/lib/firebase';
 import { IRavelryPattern } from '@/types';
 import { doc, setDoc, serverTimestamp, deleteDoc } from 'firebase/firestore';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function RavelryCard({ pattern, activeTab, RavelryBookmarks }: { pattern: IRavelryPattern; activeTab: number; RavelryBookmarks: string[] }) {
-    const isActive = RavelryBookmarks.includes(String(pattern.id));
-
     const { user } = useAuth();
+    const isActive = RavelryBookmarks.includes(String(pattern.id));
+    const queryClient = useQueryClient();
 
     const handlePinClick = async (patternData: IRavelryPattern) => {
         if (!user) {
-            window.alert('로그인 하셍요');
+            window.alert('로그인이 필요합니다.');
             return;
         }
 
@@ -29,6 +30,7 @@ export function RavelryCard({ pattern, activeTab, RavelryBookmarks }: { pattern:
                     createdAt: serverTimestamp(),
                 });
             }
+            await queryClient.invalidateQueries({ queryKey: ['RavelryBookmarks'] });
         } catch (error) {
             console.error('Firestore 저장 실패:', error);
         }
@@ -38,9 +40,18 @@ export function RavelryCard({ pattern, activeTab, RavelryBookmarks }: { pattern:
         window.open(`https://www.ravelry.com/patterns/library/${permalink}`, '_blank');
     };
 
+    const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            handleCardClick(pattern.permalink);
+        }
+    };
+
     return (
         <div
             onClick={() => handleCardClick(pattern.permalink)}
+            onKeyDown={handleKeyDown}
+            tabIndex={0}
             role="button"
             className="group w-[220px] border-[3px] border-dashed border-[#8FD3C3] p-3 rounded-xl 
                         transition-all duration-300 ease-out cursor-pointer bg-white
@@ -56,9 +67,7 @@ export function RavelryCard({ pattern, activeTab, RavelryBookmarks }: { pattern:
                     }}
                     className={`absolute top-3 right-3 flex items-center justify-center 
                                 w-9 h-9 rounded-full transition-all duration-300 shadow-sm
-                                ${
-                                    isActive ? 'bg-[#8FD3C3] opacity-100 scale-100' : 'bg-white/90 backdrop-blur-sm opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100' // 기본: 호버 시 노출
-                                }`}
+                                ${isActive ? 'bg-[#8FD3C3] opacity-100 scale-100' : 'bg-white/90 backdrop-blur-sm opacity-0 scale-75 group-hover:opacity-100 group-hover:scale-100'}`}
                 >
                     <button
                         className={`w-6 h-6 bg-[url('/images/icons/icon_pin.png')] bg-contain bg-center bg-no-repeat
@@ -68,7 +77,6 @@ export function RavelryCard({ pattern, activeTab, RavelryBookmarks }: { pattern:
                 </div>
             </div>
 
-            {/* 텍스트 영역 */}
             <div className="space-y-1">
                 <p className="text-xl font-medium truncate" title={pattern.name}>
                     {pattern.name}
