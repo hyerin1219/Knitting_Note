@@ -30,3 +30,7 @@ a {
     font-family: 'OngleipStudyWell';
     cursor: pointer;
 }
+textarea {
+    resize: none;
+    outline: none;
+}

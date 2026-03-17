@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/layout/header';
-import RavelryQueryProvider from '@/app/providers/ravelryQueryProvider';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -27,13 +26,10 @@ export default function RootLayout({
     return (
         <html lang="ko">
             <body className={`p-5  ${geistSans.variable} ${geistMono.variable} antialiased`}>
-                {/* Ravelry query */}
-                <RavelryQueryProvider>
-                    <div className="border-3 w-full h-full bg-white">
-                        <Header />
-                        <main className="border-t-3 p-7 px-10 overflow-y-auto">{children}</main>
-                    </div>
-                </RavelryQueryProvider>
+                <div className="border-3 w-full h-full bg-white">
+                    <Header />
+                    <main className="border-t-3 p-7 px-10 overflow-y-auto">{children}</main>
+                </div>
             </body>
         </html>
     );
