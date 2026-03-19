@@ -1,35 +1,61 @@
 'use client';
 
 import { useState } from 'react';
-import { type NeedleType, type Category } from '@/types';
+import { addDoc, collection } from 'firebase/firestore';
+
+import WritePattern from './writePattern';
+
 import { SelectButtonGroup } from '@/components/ui/selectButton';
-
 import { Button } from '@/components/ui/button';
-import { CATEGORIES, NEEDLE_TYPES } from '@/lib';
 
-type FormState = {
-    title: string;
-    content: string;
-    needleSize: string;
-    needleType: NeedleType | '';
-    category: Category | '';
-};
+import { useAuth } from '@/hooks/useAuth';
+
+import { CATEGORIES } from '@/lib';
+import { db } from '@/lib/firebase';
+import { IPatternTextItem, IFormState } from '@/types';
+import { useRouter } from 'next/navigation';
 
 export default function PatternsWrite() {
-    const [form, setForm] = useState<FormState>({
+    const { uid } = useAuth();
+    const [items, setItems] = useState<IPatternTextItem[]>([]);
+    const [form, setForm] = useState<IFormState>({
         title: '',
-        needleSize: '',
-        needleType: '',
+        // needleSize: '',
         category: '',
         content: '',
     });
+    const router = useRouter();
 
-    const handleChange = (key: keyof FormState, value: string) => {
+    const handleChange = (key: keyof IFormState, value: string) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!uid) return;
+
+        try {
+            const res = await fetch('/api/gemini', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: items }),
+            });
+            const itemPattern = await res.json();
+
+            const patternRef = collection(db, 'users', uid, 'patterns');
+
+            const docRef = await addDoc(patternRef, {
+                ...form,
+                // items,
+                createdAt: Date.now(),
+                itemPattern,
+            });
+
+            router.push(`/patterns/${docRef.id}`);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -54,16 +80,10 @@ export default function PatternsWrite() {
                     </div> */}
 
                     {/* 설명 */}
-                    {/* <div className="">
+                    <div className="">
                         <label className="shrink-0">설명</label>
                         <textarea value={form.content} onChange={(e) => handleChange('content', e.target.value)} placeholder="도안 설명을 적어주세요." className="w-full py-1 px-3 rounded-lg border border-gray-200 shadow-sm focus:ring-1 focus:ring-[#8FD3C3]/40" />
-                    </div> */}
-
-                    {/* 바늘 종류 */}
-                    {/* <div>
-                        <p className="mb-2">바늘 종류</p>
-                        <SelectButtonGroup options={NEEDLE_TYPES} value={form.needleType} onChange={(val) => handleChange('needleType', val)} />
-                    </div> */}
+                    </div>
 
                     {/* 카테고리 */}
                     <div>
@@ -74,6 +94,7 @@ export default function PatternsWrite() {
                     {/* 도안 */}
                     <div className="">
                         <p className="mb-2">도안</p>
+                        <WritePattern items={items} setItems={setItems} />
                     </div>
 
                     {/* 버튼 */}
