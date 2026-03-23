@@ -51,7 +51,7 @@ export default function WritePattern({ items, setItems }: IProps) {
 
             <div className="mt-5 space-y-2 h-[300px] overflow-y-auto">
                 {items.length === 0 ? (
-                    <p className="text-gray-400 text-sm">아직 추가된 도안이 없어요.</p>
+                    <p className="text-gray-400 text-sm">도안을 작성해 보세요.</p>
                 ) : (
                     items.map((el) => (
                         <div key={el.id} className="p-3 rounded-lg border border-gray-100 bg-white shadow-sm">

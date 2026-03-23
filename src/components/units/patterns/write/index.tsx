@@ -12,7 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 
 import { CATEGORIES } from '@/lib';
 import { db } from '@/lib/firebase';
-import { IPatternTextItem, IFormState } from '@/types';
+import { IPatternTextItem, IFormState, IPattern } from '@/types';
 import { useRouter } from 'next/navigation';
 
 export default function PatternsWrite() {
@@ -26,7 +26,7 @@ export default function PatternsWrite() {
     });
     const router = useRouter();
 
-    const handleChange = (key: keyof IFormState, value: string) => {
+    const handleChange = (key: keyof IPattern, value: string) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     };
 
@@ -36,20 +36,19 @@ export default function PatternsWrite() {
         if (!uid) return;
 
         try {
-            const res = await fetch('/api/gemini', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: items }),
-            });
-            const itemPattern = await res.json();
+            // const res = await fetch('/api/gemini', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ content: items }),
+            // });
+            // const itemPattern = await res.json();
 
             const patternRef = collection(db, 'users', uid, 'patterns');
 
             const docRef = await addDoc(patternRef, {
                 ...form,
-                // items,
+                items,
                 createdAt: Date.now(),
-                itemPattern,
             });
 
             router.push(`/patterns/${docRef.id}`);

@@ -10,7 +10,7 @@ export type IPatternTextItem = {
     text: string;
 };
 
-// 코바늘 도안 등록 타입
+// 코바늘 도안 form 타입
 export type IFormState = {
     title: string;
     content: string;
@@ -18,15 +18,15 @@ export type IFormState = {
     category: Category | '';
 };
 
-type IitemPattern = {
-    pattern: [];
-};
-
-// 등록된 도안 타입
+// 최종 도안 타입
 export type IPattern = {
     title: string;
     content: string;
     category: string;
-    itemPattern: IitemPattern;
-    // items: IPatternTextItem[];
+    items: IPatternTextItem[];
+};
+
+export type IimagePattern = {
+    id: number;
+    stitches: string[];
 };

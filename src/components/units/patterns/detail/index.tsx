@@ -6,7 +6,9 @@ import { useParams } from 'next/navigation';
 
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
-import { IPattern } from '@/types';
+import { IimagePattern, IPattern } from '@/types';
+import { Button } from '@/components/ui/button';
+import ImagePattern from './imagePattern';
 
 export default function PatternsDetail() {
     const { uid } = useAuth();
@@ -17,7 +19,10 @@ export default function PatternsDetail() {
     const [loading, setLoading] = useState(true);
     const [completedIds, setCompletedIds] = useState<string[]>([]);
 
-    const toggleComplete = (id: string) => {
+    const [imagePattern, setImagePattern] = useState<IimagePattern[] | null>(null);
+    const [isConverting, setIsConverting] = useState(false);
+
+    const handleToggleComplete = (id: string) => {
         setCompletedIds((prev) => (prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]));
     };
 
@@ -30,7 +35,6 @@ export default function PatternsDetail() {
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    // setPattern(docSnap.data() as IPattern);
                     setPattern(docSnap.data() as IPattern);
                 }
             } catch (error) {
@@ -43,49 +47,68 @@ export default function PatternsDetail() {
         fetchPattern();
     }, [uid, id]);
 
+    const handleSignPatten = async () => {
+        if (!pattern) return;
+
+        setIsConverting(true);
+        try {
+            const res = await fetch('/api/gemini', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: pattern.items }),
+            });
+
+            const item = await res.json();
+
+            setImagePattern(item.pattern);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setIsConverting(false);
+        }
+    };
+
     if (loading) return <div className="p-4">로딩중...</div>;
     if (!pattern) return <div className="p-4">데이터 없음</div>;
 
     return (
         <section className="">
             {/* 상단 정보 */}
-            <div className="">
+            <div className="mb-2">
                 <h2 className="text-2xl font-bold">{pattern.title}</h2>
                 <p className="text-sm text-gray-500 mt-1">{pattern.category}</p>
                 <p className="text-gray-600 mt-3 whitespace-pre-line">{pattern.content}</p>
             </div>
 
-            {/* 도안 리스트 */}
-            <div className="mt-5 space-y-2 h-[300px] overflow-y-auto">
-                {pattern.itemPattern?.pattern?.map((el: any) => {
-                    const isDone = completedIds.includes(String(el.id));
+            <Button className="block ml-auto" onClick={handleSignPatten}>
+                기호 도안으로 보기
+            </Button>
 
-                    return (
-                        <div
-                            role="button"
-                            key={el.id}
-                            onClick={() => toggleComplete(String(el.id))}
-                            className={`
+            {/* 도안 리스트 */}
+            <div className="flex items-start justify-center gap-2 mt-4">
+                <div className="shrink-0 mt-2 space-y-2  w-[49%] h-[450px] overflow-y-auto">
+                    {pattern.items.map((el) => {
+                        const isDone = completedIds.includes(String(el.id));
+
+                        return (
+                            <div
+                                role="button"
+                                key={el.id}
+                                onClick={() => handleToggleComplete(String(el.id))}
+                                className={`
                                 cursor-pointer transition  p-4 rounded-xl  border border-gray-100 shadow-sm
                                 ${isDone ? 'bg-[#8FD3C3]' : 'bg-white  hover:bg-gray-50'}
                             `}
-                        >
-                            <p className={`font-bold ${isDone ? 'line-through ' : 'text-gray-900'}`}>{el.id} 단</p>
+                            >
+                                <p className={`font-bold ${isDone ? 'line-through ' : 'text-gray-900'}`}>{el.rows} 단</p>
 
-                            {/* 설명 */}
-                            <p className={`mt-1 ${isDone ? 'hidden' : ''}`}>{el.description}</p>
-
-                            {/* stitches (핵심🔥) */}
-                            {/* <div className="mt-2 flex flex-wrap gap-1">
-                                {el.stitches.map((st: string, idx: number) => (
-                                    <span key={idx} className="px-2 py-0.5 text-xs rounded bg-gray-100">
-                                        {st}
-                                    </span>
-                                ))}
-                            </div> */}
-                        </div>
-                    );
-                })}
+                                {/* 설명 */}
+                                <p className={`mt-1 ${isDone ? 'hidden' : ''}`}>{el.text}</p>
+                            </div>
+                        );
+                    })}
+                </div>
+                {imagePattern && <ImagePattern data={imagePattern} />}
             </div>
         </section>
     );

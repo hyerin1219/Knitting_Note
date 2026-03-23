@@ -16,7 +16,7 @@ export async function POST(req: Request) {
                         type: z.enum(['round', 'row']),
                         stitches: z.array(z.string()),
                         description: z.string(),
-                    }),
+                    })
                 ),
             }),
             system: `
@@ -31,9 +31,11 @@ export async function POST(req: Request) {
                     - 예) "2~4"는 2,3,4단으로 각각 생성
                     - text는 도안 설명
                     - stitches는 작업 순서대로 풀어서 배열로 작성
+                    - 짧은 뜨기 뒤 늘려뜨기는 scInc
+                    - 긴뜨기,한길긴뜨기 뒤 늘려뜨기는 dcInc
 
                     표준 기호:
-                    ch, sc, inc, dec, mr, sl
+                    'mr','ch','slst','sc','scBlo','reverseSc','dc','tr','dtr','scInc','dcInc','dc3Inc','shell','crossDc','dcBlo','bobble5','cluster3','popcorn5','fpSc','bpDc','fpDc','scDec','picot','wrappedDc','mesh','scBobble'
 
                     예시:
 
