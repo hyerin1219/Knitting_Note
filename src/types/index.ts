@@ -1,7 +1,4 @@
-import { CATEGORIES, NEEDLE_TYPES } from '@/lib';
-
-export type NeedleType = (typeof NEEDLE_TYPES)[number]['value'];
-export type Category = (typeof CATEGORIES)[number]['value'];
+import { CATEGORIES } from '@/lib';
 
 // 코바늘 도안 타입
 export type IPatternTextItem = {
@@ -14,8 +11,7 @@ export type IPatternTextItem = {
 export type IFormState = {
     title: string;
     content: string;
-    // needleSize: string;
-    category: Category | '';
+    category: string;
 };
 
 // 최종 도안 타입
@@ -24,8 +20,10 @@ export type IPattern = {
     content: string;
     category: string;
     items: IPatternTextItem[];
+    imagePattern: IimagePattern[];
 };
 
+// ai 결과값 이미지 도안
 export type IimagePattern = {
     id: number;
     stitches: string[];

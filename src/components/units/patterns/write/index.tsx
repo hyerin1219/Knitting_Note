@@ -20,13 +20,12 @@ export default function PatternsWrite() {
     const [items, setItems] = useState<IPatternTextItem[]>([]);
     const [form, setForm] = useState<IFormState>({
         title: '',
-        // needleSize: '',
         category: '',
         content: '',
     });
     const router = useRouter();
 
-    const handleChange = (key: keyof IPattern, value: string) => {
+    const handleChange = (key: keyof IFormState, value: string) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     };
 
@@ -36,13 +35,6 @@ export default function PatternsWrite() {
         if (!uid) return;
 
         try {
-            // const res = await fetch('/api/gemini', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ content: items }),
-            // });
-            // const itemPattern = await res.json();
-
             const patternRef = collection(db, 'users', uid, 'patterns');
 
             const docRef = await addDoc(patternRef, {
@@ -68,15 +60,6 @@ export default function PatternsWrite() {
                         <label className="shrink-0">제목</label>
                         <input value={form.title} onChange={(e) => handleChange('title', e.target.value)} placeholder="도안 제목을 입력하세요." className="w-full py-1 px-3 rounded-lg border border-gray-200 shadow-sm focus:ring-1 focus:ring-[#8FD3C3]/40" />
                     </div>
-
-                    {/* 바늘 크기 */}
-                    {/* <div className="flex items-center gap-5">
-                        <label className="shrink-0">바늘 크기</label>
-                        <div>
-                            <input value={form.needleSize} onChange={(e) => handleChange('needleSize', e.target.value)} placeholder="예) 3.5" className="w-24 py-1 px-3 rounded-lg border border-gray-200 shadow-sm focus:ring-1 focus:ring-[#8FD3C3]/40 mr-1" />
-                            mm
-                        </div>
-                    </div> */}
 
                     {/* 설명 */}
                     <div className="">

@@ -1,10 +1,3 @@
-// 바늘 타입
-export const NEEDLE_TYPES = [
-    { value: 'both', label: '코바늘 + 대바늘' },
-    { value: 'crochet', label: '코바늘' },
-    { value: 'knitting', label: '대바늘' },
-] as const;
-
 // 카테고리
 export const CATEGORIES = [
     { value: 'clothing', label: '의류' },

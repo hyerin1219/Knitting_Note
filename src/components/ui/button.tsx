@@ -7,8 +7,8 @@ const buttonVariants = cva('inline-flex items-center justify-center whitespace-n
     variants: {
         variant: {
             default: 'bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97]',
-            outline: 'border border-[#8FD3C3] text-[#8FD3C3] hover:bg-[#8FD3C3]/10',
-            ghost: 'text-[#8FD3C3] hover:bg-[#8FD3C3]/10',
+
+            close: 'bg-[#ddd] hover:bg-[#eee]/10',
         },
         size: {
             default: 'h-10 px-4 py-2 rounded-lg',
