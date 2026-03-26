@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import Image from 'next/image';
 import html2canvas from 'html2canvas';
 import { IimagePattern } from '@/types';
@@ -10,7 +10,6 @@ type IProps = {
 
 export default function ImagePattern({ data }: IProps) {
     const captureRef = useRef<HTMLDivElement>(null);
-    const [isActive, setIsActive] = useState(false);
 
     // 캠쳐 함수
     const handleCapture = async () => {
@@ -34,44 +33,22 @@ export default function ImagePattern({ data }: IProps) {
     };
 
     return (
-        <div className="w-[62%]">
-            <Button onClick={() => setIsActive(true)}>크게보기</Button>
-            <div className="w-full overflow-x-auto p-2">
-                {data.map((el) => (
-                    <div key={el.id} className="flex gap-1 min-w-max">
-                        {el.stitches.map((stitch, idx) => (
-                            <img className="inline-block  w-5 shrink-0" key={`${el.id}-${idx}`} alt={stitch} src={`/images/stitch/${stitch}.png`} />
-                            // <Image key={`${el.id}-${idx}`} src={`/images/stitch/${stitch}.png`} alt={stitch} width={20} height={20} className="object-contain" />
-                        ))}
-                    </div>
-                ))}
-            </div>
+        <div className="p-2">
+            {/* <Button onClick={() => setIsActive(true)}>크게보기</Button> */}
+            <Button onClick={handleCapture} className="">
+                이미지 저장하기
+            </Button>
 
-            {/* 배경 오버레이 */}
-            <div
-                className={`fixed flex items-center justify-center  inset-0 bg-black/40 transition-opacity duration-300
-                ${isActive ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
-            >
-                <div className="bg-white rounded p-3 max-w-[90%] max-h-[90%] overflow-x-auto overflow-y-auto">
-                    <div className="flex items-center justify-between gap-2 mb-5">
-                        <Button onClick={handleCapture} className="">
-                            이미지 저장하기
-                        </Button>
-                        <Button onClick={() => setIsActive(false)} variant="close">
-                            닫기
-                        </Button>
-                    </div>
-
-                    <div ref={captureRef}>
-                        {data.map((el) => (
-                            <div key={el.id} className="flex gap-1 min-w-max">
-                                {el.stitches.map((stitch, idx) => (
-                                    <img className="inline-block w-10 shrink-0" key={`${el.id}-${idx}`} alt={stitch} src={`/images/stitch/${stitch}.png`} />
-                                    // <Image key={`${el.id}-${idx}`} src={`/images/stitch/${stitch}.png`} alt={stitch} width={20} height={20} className="object-contain" />
-                                ))}
-                            </div>
-                        ))}
-                    </div>
+            <div className="w-full overflow-auto mt-3 py-2">
+                <div ref={captureRef}>
+                    {/* 코바늘 도안 형식에 맞게 순서 변경 */}
+                    {[...data].reverse().map((el) => (
+                        <div key={el.id} className="grid gap-1 justify-items-center mt-0.5" style={{ gridTemplateColumns: `repeat(${el.stitches.length}, 1fr)` }}>
+                            {el.stitches.map((stitch, idx) => (
+                                <img className=" " key={`${el.id}-${idx}`} alt={stitch} src={`/images/stitch/${stitch}.png`} />
+                            ))}
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>

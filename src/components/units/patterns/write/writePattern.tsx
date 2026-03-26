@@ -1,6 +1,8 @@
 import { useId, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { IPatternTextItem } from '@/types';
+import { useAlert } from '@/hooks/useAlert';
+import { Button } from '@/components/ui/button';
+import Alert from '@/components/ui/alert';
 
 type IProps = {
     items: IPatternTextItem[];
@@ -11,12 +13,19 @@ export default function WritePattern({ items, setItems }: IProps) {
     const reactId = useId();
     const [rows, seRows] = useState<string>('1');
     const [text, setText] = useState<string>('');
+    const { showAlert, alertValue, triggerAlert } = useAlert();
 
     const handleAdd = () => {
         const cleaned = text.trim();
 
-        if (!cleaned) return;
-
+        if (!rows) {
+            triggerAlert('단을 입력해주세요.');
+            return;
+        }
+        if (!text) {
+            triggerAlert('설명을 입력해주세요.');
+            return;
+        }
         setItems((prev) => [
             ...prev,
             {
@@ -67,6 +76,8 @@ export default function WritePattern({ items, setItems }: IProps) {
                     ))
                 )}
             </div>
+
+            {showAlert && <Alert alertValue={alertValue} />}
         </div>
     );
 }

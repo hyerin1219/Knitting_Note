@@ -16,9 +16,12 @@ export type IFormState = {
 
 // 최종 도안 타입
 export type IPattern = {
+    id: string; // 문서 id
+    author: string; // 작가 uid
     title: string;
     content: string;
     category: string;
+    createdAt: string;
     items: IPatternTextItem[];
     imagePattern: IimagePattern[];
 };

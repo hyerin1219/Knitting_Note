@@ -35,12 +35,13 @@ export default function PatternsWrite() {
         if (!uid) return;
 
         try {
-            const patternRef = collection(db, 'users', uid, 'patterns');
+            const patternRef = collection(db, 'patterns');
 
             const docRef = await addDoc(patternRef, {
+                author: uid,
                 ...form,
                 items,
-                createdAt: Date.now(),
+                createdAt: new Date().toLocaleDateString(),
             });
 
             router.push(`/patterns/${docRef.id}`);
@@ -50,8 +51,8 @@ export default function PatternsWrite() {
     };
 
     return (
-        <section>
-            <h2 className="text-3xl mb-8 text-center">코바늘 도안 작성하기</h2>
+        <section className="Content">
+            <h2 className="Title  mb-8">코바늘 도안 작성하기</h2>
 
             <form onSubmit={handleSubmit}>
                 <div className="text-xl space-y-6">

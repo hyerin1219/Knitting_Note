@@ -18,18 +18,23 @@ export default function Menu({ open, onClose }: IProps) {
                 },
             ],
         },
+
+        {
+            label: '마이 페이지',
+            href: '/myPage',
+        },
     ];
     return (
-        <div>
+        <section className="">
             {/* 배경 오버레이 */}
             <div
                 onClick={onClose}
-                className={`fixed inset-0 bg-black/40 transition-opacity duration-300
+                className={`fixed inset-0 bg-black/40 transition-opacity duration-300 z-[90]
                 ${open ? 'opacity-100 visible' : 'opacity-0 invisible'}`}
             />
 
             {/* 사이드 메뉴 */}
-            <div className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
+            <div className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 z-[100] ${open ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="p-4">
                     <button onClick={onClose} className="relative block w-6 h-6 group ml-auto" aria-label="메뉴 닫기">
                         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 rounded bg-black rotate-45 group-hover:rotate-0 transition-rotate duration-300" />
@@ -61,6 +66,6 @@ export default function Menu({ open, onClose }: IProps) {
                     </ul>
                 </div>
             </div>
-        </div>
+        </section>
     );
 }
