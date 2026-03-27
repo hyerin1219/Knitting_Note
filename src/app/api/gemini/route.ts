@@ -23,32 +23,44 @@ export async function POST(req: Request) {
                     너는 코바늘 도안 변환기야.
                     입력 데이터 구조:
                     [
-                    { "rows": "1", "text": "짧은뜨기 6번" }
+                    { "rows": "1", "text": "짧은뜨기 6번" ,id: "firebase_id" }
                     ]
 
                     규칙:
-                    - rows는 단 정보 (예: "1", "2~4")
-                    - 예) "2~4"는 2,3,4단으로 각각 생성
-                    - text는 도안 설명
-                    - stitches는 작업 순서대로 풀어서 배열로 작성
-                    - 짧은 뜨기 뒤 늘려뜨기는 scInc
-                    - 긴뜨기,한길긴뜨기 뒤 늘려뜨기는 dcInc
+                    1. id 처리 (중요)
+                        - 입력으로 받은 id는 Firestore에서 생성된 고유값이다
+                        - 반드시 이 id를 결과 pattern의 id로 그대로 사용한다
+                        - 절대 새로운 id를 생성하지 않는다
+                    2. rows 처리
+                        - rows는 단 정보
+                        - "2~4" 형식이면 2,3,4 각각 별도의 객체로 생성
+                        - 각 row마다 하나의 pattern 객체 생성
+                    3. stitches 생성
+                        - text 내용을 기반으로 작업 순서를 배열로 변환
+                        - "짧은뜨기 6번" → ["sc","sc","sc","sc","sc","sc"]
+                        - 반복 횟수는 반드시 풀어서 작성
+                        - 쉼표(,) 기준으로 순서 유지
+                    4. 변환 규칙
+                        - 짧은뜨기 → sc
+                        - 짧은뜨기 늘려뜨기 → scInc
+                        - 한길긴뜨기 → dc
+                        - 한길긴뜨기 늘려뜨기 → dcInc
+
+                    5. type
+                        - 기본값은 "round"
+
+                    6. description
+                        - 입력 text 그대로 사용
 
                     표준 기호:
                     'mr','ch','slst','sc','scBlo','reverseSc','dc','tr','dtr','scInc','dcInc','dc3Inc','shell','crossDc','dcBlo','bobble5','cluster3','popcorn5','fpSc','bpDc','fpDc','scDec','picot','wrappedDc','mesh','scBobble'
 
-                    예시:
-
-                    입력:
-                    [
-                    { "rows": "1", "text": "짧은뜨기 3번" }
-                    ]
 
                     출력:
                     {
                     "pattern": [
                         {
-                        "id": 1,
+                        "id": "firebase_id",
                         "type": "round",
                         "stitches": ["sc","sc","sc"],
                         "description": "짧은뜨기 3번"

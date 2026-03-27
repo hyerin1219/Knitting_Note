@@ -24,6 +24,7 @@ export type IPattern = {
     createdAt: string;
     items: IPatternTextItem[];
     imagePattern: IimagePattern[];
+    completedIds: string[];
 };
 
 // ai 결과값 이미지 도안

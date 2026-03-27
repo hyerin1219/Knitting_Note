@@ -1,15 +1,12 @@
 'use client';
 import { Button } from '@/components/ui/button';
-import PatternCard from '@/components/ui/patternCard';
+import PatternList from '@/components/ui/patternList';
 import { usePattern } from '@/hooks/usePattern';
-// import { CATEGORIES } from '@/lib';
 
 import Link from 'next/link';
-// import { useRouter } from 'next/navigation';
 
 export default function Patterns() {
-    const { data } = usePattern('ALL');
-    // const router = useRouter();
+    const { data } = usePattern();
 
     return (
         <section className="Content">
@@ -20,7 +17,7 @@ export default function Patterns() {
                 <Link href="/patterns/write">도안 작성하기</Link>
             </Button>
 
-            <PatternCard data={data} />
+            <PatternList data={data} />
         </section>
     );
 }

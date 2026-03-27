@@ -10,7 +10,6 @@ type IProps = {
 };
 
 export default function WritePattern({ items, setItems }: IProps) {
-    const reactId = useId();
     const [rows, seRows] = useState<string>('1');
     const [text, setText] = useState<string>('');
     const { showAlert, alertValue, triggerAlert } = useAlert();
@@ -29,7 +28,7 @@ export default function WritePattern({ items, setItems }: IProps) {
         setItems((prev) => [
             ...prev,
             {
-                id: `${reactId}-${Date.now()}-${prev.length}`,
+                id: `${Date.now()}`,
                 rows,
                 text: cleaned,
             },

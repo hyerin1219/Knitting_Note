@@ -1,15 +1,16 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, addDoc, collection } from 'firebase/firestore';
 
-import { usePatternDetail } from '@/hooks/usePattern';
 import { Button } from '@/components/ui/button';
 import ImagePattern from './imagePattern';
 
 import { IimagePattern } from '@/types';
 import { CATEGORIES } from '@/lib';
 import { db } from '@/lib/firebase';
+import { useAuth } from '@/hooks/useAuth';
+import { usePatternDetail } from '@/hooks/usePattern';
 
 export default function PatternsDetail() {
     const params = useParams();
@@ -21,9 +22,33 @@ export default function PatternsDetail() {
     const [imagePattern, setImagePattern] = useState<IimagePattern[] | null>(null);
     const [isConverting, setIsConverting] = useState(false);
 
-    // 작업 단 체크
-    const handleToggleComplete = (id: string) => {
-        setCompletedIds((prev) => (prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]));
+    const { uid } = useAuth();
+
+    useEffect(() => {
+        if (pattern?.completedIds) {
+            setCompletedIds(pattern.completedIds);
+        }
+    }, [pattern]);
+
+    // 단수 체크
+    const handleToggleComplete = async (stepId: string) => {
+        if (!pattern?.id) return;
+
+        const isNow = completedIds.includes(stepId);
+
+        const updated = isNow ? completedIds.filter((v) => v !== stepId) : [...completedIds, stepId];
+
+        setCompletedIds(updated);
+
+        try {
+            const docRef = doc(db, 'patterns', pattern.id);
+
+            await updateDoc(docRef, {
+                completedIds: updated,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     // 기호 도안 만들기
@@ -41,7 +66,7 @@ export default function PatternsDetail() {
             const item = await res.json();
             setImagePattern(item.pattern);
             // ai 결과 값 저장
-            // if (!uid || !id) return;
+            if (!uid || !id) return;
             const docRef = doc(db, 'patterns', id);
             await updateDoc(docRef, {
                 imagePattern: item.pattern,
@@ -58,9 +83,9 @@ export default function PatternsDetail() {
     const source = pattern?.imagePattern ?? imagePattern;
 
     return (
-        <section className="Content">
+        <section className="Content ">
             {/* 상단 카드 */}
-            <div className="mx-auto rounded-2xl border border-[#8FD3C3]/30 bg-gradient-to-br from-[#F5FBF9] to-white p-5 shadow-sm">
+            <div className="relative mx-auto rounded-2xl border border-[#8FD3C3]/30 bg-gradient-to-br from-[#F5FBF9] to-white p-5 shadow-sm">
                 <h2 className="text-xl font-semibold text-gray-900">{pattern.title}</h2>
                 <span className="mt-2 inline-block rounded-full bg-[#8FD3C3]/20 px-3 py-1 text-xs font-medium text-[#5FB8A6]">{CATEGORIES.find((el) => el.value === pattern.category)?.label}</span>
                 <p className="mt-4 text-sm text-gray-600 whitespace-pre-line leading-relaxed">{pattern.content}</p>

@@ -13,15 +13,10 @@ export default function Menu({ open, onClose }: IProps) {
             href: '/patterns',
             children: [
                 {
-                    label: '코바늘 도안 작성하기',
+                    label: '서술 도안 작성하기',
                     href: '/patterns/write',
                 },
             ],
-        },
-
-        {
-            label: '마이 페이지',
-            href: '/myPage',
         },
     ];
     return (

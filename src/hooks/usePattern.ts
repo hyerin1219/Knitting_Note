@@ -1,12 +1,10 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { collection, query, where, getDocs, orderBy, CollectionReference, Query, doc, getDoc } from 'firebase/firestore';
+import { collection, query, getDocs, orderBy, doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { IPattern } from '@/types';
 
-type IViewType = 'ALL' | 'MINE' | 'SAVED';
-
-export function usePattern(type: IViewType, userId?: string) {
+export function usePattern() {
     const [data, setData] = useState<IPattern[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -14,32 +12,14 @@ export function usePattern(type: IViewType, userId?: string) {
         const fetchPatterns = async () => {
             setLoading(true);
             try {
-                let q: Query;
-
-                switch (type) {
-                    case 'MINE':
-                        // 내가 만든 도안: author 필터링
-                        q = query(collection(db, 'patterns'), where('author', '==', userId), orderBy('createdAt', 'desc'));
-                        break;
-
-                    case 'SAVED':
-                        // 내가 저장한 도안: 유저 하위의 bookmarks 컬렉션 조회
-                        // (북마크 저장 시 패턴 정보를 일부 포함해서 저장했다고 가정)
-                        q = query(collection(db, 'users', userId || '', 'bookmarks'), orderBy('savedAt', 'desc'));
-                        break;
-
-                    case 'ALL':
-                    default:
-                        // 전체 도안
-                        q = query(collection(db, 'patterns'), orderBy('createdAt', 'desc'));
-                        break;
-                }
+                const q = query(collection(db, 'patterns'), orderBy('createdAt', 'desc'));
 
                 const querySnapshot = await getDocs(q);
+
                 const results = querySnapshot.docs.map((doc) => ({
                     id: doc.id,
                     ...doc.data(),
-                })) as any[]; // 임시
+                })) as IPattern[];
 
                 setData(results);
             } catch (error) {
@@ -49,9 +29,8 @@ export function usePattern(type: IViewType, userId?: string) {
             }
         };
 
-        if (type !== 'ALL' && !userId) return; // 유저 정보가 필요한데 없으면 대기
         fetchPatterns();
-    }, [type, userId]);
+    }, []);
 
     return { data, loading };
 }
@@ -59,7 +38,6 @@ export function usePattern(type: IViewType, userId?: string) {
 export function usePatternDetail(id: string) {
     const [pattern, setPattern] = useState<IPattern | null>(null);
     const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         const fetchDetail = async () => {
             if (!id) return;
@@ -67,7 +45,6 @@ export function usePatternDetail(id: string) {
             try {
                 const docRef = doc(db, 'patterns', id);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     setPattern({ id: docSnap.id, ...docSnap.data() } as IPattern);
                 }
@@ -79,6 +56,5 @@ export function usePatternDetail(id: string) {
         };
         fetchDetail();
     }, [id]);
-
     return { pattern, loading };
 }
