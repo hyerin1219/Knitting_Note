@@ -10,35 +10,35 @@ export const CATEGORIES = [
 
 // 코바늘 기호
 export const CrochetSymbol = [
-    { value: 'mr' }, // 매직링
+    { label: 'mr', value: '매직링' }, // 매직링
 
-    { value: 'ch' }, // 사슬뜨기
-    { value: 'slst' }, // 빼뜨기
-    { value: 'sc' }, // 짧은뜨기
-    { value: 'scBlo' }, // 이랑 짧은뜨기 (뒷고리)
-    { value: 'reverseSc' }, // 되돌아 짧은뜨기 (크랩스티치)
+    { label: 'ch', value: '사슬뜨기' }, // 사슬뜨기
+    { label: 'slst', value: '빼뜨기' }, // 빼뜨기
+    { label: 'sc', value: '짧은뜨기' }, // 짧은뜨기
+    { label: 'scBlo', value: '이랑 짧은뜨기' }, // 이랑 짧은뜨기 (뒷고리)
+    { label: 'reverseSc', value: '되돌아 짧은뜨기' }, // 되돌아 짧은뜨기 (크랩스티치)
 
-    { value: 'dc' }, // 긴뜨기
-    { value: 'tr' }, // 한길긴뜨기
-    { value: 'dtr' }, // 두길긴뜨기
-    { value: 'scInc' }, // 짧은뜨기 늘림
-    { value: 'dcInc' }, // 긴뜨기 늘림
+    { label: 'dc', value: '긴뜨기' }, // 긴뜨기
+    { label: 'tr', value: '한길긴뜨기' }, // 한길긴뜨기
+    { label: 'dtr', value: '두길긴뜨기' }, // 두길긴뜨기
+    { label: 'scInc', value: '짧은뜨기 늘림' }, // 짧은뜨기 늘림
+    { label: 'dcInc', value: '긴뜨기 늘림' }, // 긴뜨기 늘림
 
-    { value: 'dc3Inc' }, // 한길긴뜨기 3코 늘림
-    { value: 'shell' }, // 조개무늬뜨기 (쉘)
-    { value: 'crossDc' }, // 엇걸어뜨기
-    { value: 'dcBlo' }, // 이랑 긴뜨기 (뒷고리)
-    { value: 'bobble5' }, // 5코 구슬뜨기 (보블)
+    { label: 'dc3Inc', value: '한길긴뜨기 3코 늘림' }, // 한길긴뜨기 3코 늘림
+    { label: 'shell', value: '조개무늬뜨기' }, // 조개무늬뜨기 (쉘)
+    { label: 'crossDc', value: '엇걸어뜨기' }, // 엇걸어뜨기
+    { label: 'dcBlo', value: '이랑 긴뜨기' }, // 이랑 긴뜨기 (뒷고리)
+    { label: 'bobble5', value: '구슬뜨기' }, // 5코 구슬뜨기 (보블)
 
-    { value: 'cluster3' }, // 3코 클러스터뜨기
-    { value: 'popcorn5' }, // 팝콘뜨기
-    { value: 'fpSc' }, // 앞걸어 짧은뜨기
-    { value: 'bpDc' }, // 뒤걸어 긴뜨기
-    { value: 'fpDc' }, // 앞걸어 긴뜨기
+    { label: 'cluster3', value: '3코 클러스터뜨기' }, // 3코 클러스터뜨기
+    { label: 'popcorn5', value: '팝콘뜨기' }, // 팝콘뜨기
+    { label: 'fpSc', value: '앞걸어 짧은뜨기' }, // 앞걸어 짧은뜨기
+    { label: 'bpDc', value: '뒤걸어 긴뜨기' }, // 뒤걸어 긴뜨기
+    { label: 'fpDc', value: '앞걸어 긴뜨기' }, // 앞걸어 긴뜨기
 
-    { value: 'scDec' }, // 짧은뜨기 줄임
-    { value: 'picot' }, // 피코뜨기
-    { value: 'wrappedDc' }, // 감아뜨기 (릴리프/케이블)
-    { value: 'mesh' }, // 그물뜨기
-    { value: 'scBobble' }, // 짧은뜨기 구슬뜨기
+    { label: 'scDec', value: '짧은뜨기 줄임' }, // 짧은뜨기 줄임
+    { label: 'picot', value: '피코뜨기' }, // 피코뜨기
+    { label: 'wrappedDc', value: '감아뜨기' }, // 감아뜨기 (릴리프/케이블)
+    { label: 'mesh', value: '그물뜨기' }, // 그물뜨기
+    { label: 'scBobble', value: '짧은뜨기 구슬뜨기' }, // 짧은뜨기 구슬뜨기
 ] as const;

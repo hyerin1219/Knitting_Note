@@ -1,14 +1,15 @@
 import { useRef } from 'react';
 import Image from 'next/image';
 import html2canvas from 'html2canvas';
-import { IimagePattern } from '@/types';
+import { IimagePattern, IPattern } from '@/types';
 import { Button } from '@/components/ui/button';
 
 type IProps = {
     data: IimagePattern[];
+    pattern: IPattern;
 };
 
-export default function ImagePattern({ data }: IProps) {
+export default function ImagePattern({ data, pattern }: IProps) {
     const captureRef = useRef<HTMLDivElement>(null);
 
     // 캠쳐 함수
@@ -34,13 +35,13 @@ export default function ImagePattern({ data }: IProps) {
 
     return (
         <div className="p-2">
-            {/* <Button onClick={() => setIsActive(true)}>크게보기</Button> */}
             <Button onClick={handleCapture} className="">
                 이미지 저장하기
             </Button>
 
-            <div className="w-full overflow-auto mt-3 py-2">
-                <div ref={captureRef}>
+            <div className="w-full overflow-auto mt-3 ">
+                <div className="p-2" ref={captureRef}>
+                    <p className="text-center text-3xl mb-1">{pattern.title}</p>
                     {/* 코바늘 도안 형식에 맞게 순서 변경 */}
                     {[...data].reverse().map((el) => (
                         <div key={el.id} className="grid gap-1 justify-items-center mt-0.5" style={{ gridTemplateColumns: `repeat(${el.stitches.length}, 1fr)` }}>

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import ImagePattern from './imagePattern';
 
 import { IimagePattern } from '@/types';
-import { CATEGORIES } from '@/lib';
+import { CATEGORIES, CrochetSymbol } from '@/lib';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
 import { usePatternDetail } from '@/hooks/usePattern';
@@ -58,18 +58,22 @@ export default function PatternsDetail() {
 
         setIsConverting(true);
         try {
-            const res = await fetch('/api/gemini', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: pattern.items }),
-            });
-            const item = await res.json();
-            setImagePattern(item.pattern);
+            {
+                CATEGORIES.find((el) => el.value === pattern.category)?.label;
+            }
+
+            // const res = await fetch('/api/gemini', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ content: pattern.items }),
+            // });
+            // const item = await res.json();
+            // setImagePattern(item.pattern);
             // ai 결과 값 저장
             if (!uid || !id) return;
             const docRef = doc(db, 'patterns', id);
             await updateDoc(docRef, {
-                imagePattern: item.pattern,
+                // imagePattern: item.pattern,
             });
         } catch (error) {
             console.error(error);
@@ -85,22 +89,22 @@ export default function PatternsDetail() {
     return (
         <section className="Content ">
             {/* 상단 카드 */}
-            <div className="relative mx-auto rounded-2xl border border-[#8FD3C3]/30 bg-gradient-to-br from-[#F5FBF9] to-white p-5 shadow-sm">
+            <div className="relative mx-auto rounded-2xl border border-[#8FD3C3]/30 bg-gradient-to-br  from-[var(--color01)] to-white p-5 shadow-sm">
                 <h2 className="text-xl font-semibold text-gray-900">{pattern.title}</h2>
                 <span className="mt-2 inline-block rounded-full bg-[#8FD3C3]/20 px-3 py-1 text-xs font-medium text-[#5FB8A6]">{CATEGORIES.find((el) => el.value === pattern.category)?.label}</span>
-                <p className="mt-4 text-sm text-gray-600 whitespace-pre-line leading-relaxed">{pattern.content}</p>
-                <Button
+                <p className="mt-4 text-lg text-gray-600 whitespace-pre-line leading-relaxed">{pattern.content}</p>
+                {/* <Button
                     className={`mt-5 rounded-lg font-medium transition
                     ${source ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-[#8FD3C3] text-white hover:bg-[#7acbbb]'} `}
                     disabled={isConverting || !!source}
                     onClick={handleSignPatten}
                 >
                     {source ? '기호 도안 생성 완료' : isConverting ? '변환중...' : '기호 도안으로 보기'}
-                </Button>
+                </Button> */}
             </div>
 
             {/* 작업 리스트 */}
-            <div className="mt-6 space-y-3">
+            <div className="mt-6 space-y-3 ">
                 {[...pattern.items].reverse().map((el) => {
                     const isDone = completedIds.includes(String(el.id));
 
@@ -132,7 +136,7 @@ export default function PatternsDetail() {
             {/* 기호 도안 */}
             {source && (
                 <div className="mt-6 ">
-                    <ImagePattern data={source} />
+                    <ImagePattern pattern={pattern} data={source} />
                 </div>
             )}
         </section>

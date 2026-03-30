@@ -14,6 +14,7 @@ import { CATEGORIES } from '@/lib';
 import { db } from '@/lib/firebase';
 import { IPatternTextItem, IFormState, IPattern } from '@/types';
 import { useRouter } from 'next/navigation';
+import WriteImagePattern from './writeImagePattern';
 
 export default function PatternsWrite() {
     const { uid } = useAuth();
@@ -77,7 +78,8 @@ export default function PatternsWrite() {
                     {/* 도안 */}
                     <div className="">
                         <p className="mb-2">도안</p>
-                        <WritePattern items={items} setItems={setItems} />
+                        {/* <WritePattern items={items} setItems={setItems} /> */}
+                        <WriteImagePattern items={items} setItems={setItems} />
                     </div>
 
                     {/* 버튼 */}

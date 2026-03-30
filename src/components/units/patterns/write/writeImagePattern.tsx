@@ -12,8 +12,9 @@ type IProps = {
     setItems: React.Dispatch<React.SetStateAction<IPatternTextItem[]>>;
 };
 
-export default function WritePattern({ items, setItems }: IProps) {
+export default function WriteImagePattern({ items, setItems }: IProps) {
     const [rows, seRows] = useState<string>('1');
+    const [counts, seCounts] = useState<string>('1');
     const [text, setText] = useState<string>('');
     const { showAlert, alertValue, triggerAlert } = useAlert();
 
@@ -57,7 +58,7 @@ export default function WritePattern({ items, setItems }: IProps) {
                 {/* 코바늘 기술 예시 */}
                 <div className="flex items-center  flex-wrap gap-2">
                     {CrochetSymbol.map((el) => (
-                        <Button onClick={() => handleAddSymbol(el.value)} className="relative rounded-full group" key={el.label}>
+                        <Button onClick={() => handleAddSymbol(el.label)} className="relative rounded-full group" key={el.label}>
                             <span> {el.value}</span>
                             <span className="absolute top-[110%] left-1/2 -translate-x-1/2 hidden group-hover:block whitespace-nowrap bg-black text-white text-sm px-2 py-1 rounded z-[1]">
                                 {el.label}
@@ -70,13 +71,22 @@ export default function WritePattern({ items, setItems }: IProps) {
                 {/* rows */}
                 <div className="flex items-center gap-1 ">
                     <Input type="text" value={rows} onChange={(e) => seRows(e.target.value)} placeholder="1"></Input>
-                    {/* <input type="text" value={rows} onChange={(e) => seRows(e.target.value)} placeholder="1" className="w-20 py-1 px-3 rounded-lg border border-gray-200 shadow-sm focus:ring-1 focus:ring-[#8FD3C3]/40" />단 */}
                 </div>
 
-                {/* text 도안 */}
+                {/* 도안 */}
                 <div className="flex items-center gap-3">
-                    {/* <Input ></Input> */}
-                    <input ref={inputRef} type="text" value={text} onChange={(e) => setText(e.target.value)} placeholder="예 (짧은뜨기 3번 늘려뜨기 2번) 3번 반복" className="flex-1 py-1 px-3 rounded-lg border border-gray-200 shadow-sm focus:ring-1 focus:ring-[#8FD3C3]/40" />
+                    <div className="flex items-center gap-1">
+                        {/* 기술 */}
+                        <Input ref={inputRef} type="text" value={text} onChange={(e) => setText(e.target.value)} className="w-50" placeholder="짧은뜨기"></Input>
+                        <Input type="number" value={counts} onChange={(e) => seCounts(e.target.value)} placeholder="1"></Input>
+                    </div>
+                    <Button type="button" size="sm">
+                        추가
+                    </Button>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <Input readOnly type="text" variant="readyOnly" className="flex-1" placeholder=""></Input>
                     <Button type="button" size="sm" onClick={handleAdd}>
                         확인
                     </Button>
