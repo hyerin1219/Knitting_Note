@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { useState } from 'react';
+import { addDoc, collection } from 'firebase/firestore';
 
 import WritePattern from './writePattern';
 
@@ -18,14 +18,10 @@ import { useRouter } from 'next/navigation';
 import { useAlert } from '@/hooks/useAlert';
 import Alert from '@/components/ui/alert';
 
-interface IWriteProps {
-    mode: 'submit' | 'edit';
-    id?: string;
-}
-
-export default function PatternsWrite({ mode, id }: IWriteProps) {
+export default function PatternsWrite() {
     const { uid } = useAuth();
     const { showAlert, alertValue, triggerAlert } = useAlert();
+
     const [items, setItems] = useState<IPatternItem[]>([]);
     const [form, setForm] = useState<IFormState>({
         title: '',
@@ -34,29 +30,6 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
     });
 
     const router = useRouter();
-
-    useEffect(() => {
-        if (mode === 'edit' && id) {
-            const fetchData = async () => {
-                const docRef = doc(db, 'patterns', id);
-                const snap = await getDoc(docRef);
-
-                if (snap.exists()) {
-                    const data = snap.data();
-
-                    setForm({
-                        title: data.title || '',
-                        content: data.content || '',
-                        category: data.category || '',
-                    });
-
-                    setItems(data.items || []);
-                }
-            };
-
-            fetchData();
-        }
-    }, [mode, id]);
 
     const handleChange = (key: keyof IFormState, value: string) => {
         setForm((prev) => ({ ...prev, [key]: value }));
@@ -67,35 +40,22 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
 
         if (!uid) return;
 
-        if (!form.title || !form.category || !form.content) {
+        if (!form.title || !form.category || !form.content || !items) {
             triggerAlert('모든 칸을 입력해주세요.');
             return;
         }
 
         try {
-            // 수정
-            if (mode === 'edit' && id) {
-                const docRef = doc(db, 'patterns', id);
+            const patternRef = collection(db, 'patterns');
 
-                await updateDoc(docRef, {
-                    ...form,
-                    items,
-                });
+            const docRef = await addDoc(patternRef, {
+                author: uid,
+                ...form,
+                items,
+                createdAt: new Date().toLocaleDateString(),
+            });
 
-                router.push(`/patterns/${id}`);
-            } else {
-                // 등록
-                const patternRef = collection(db, 'patterns');
-
-                const docRef = await addDoc(patternRef, {
-                    author: uid,
-                    ...form,
-                    items,
-                    createdAt: new Date().toLocaleDateString(),
-                });
-
-                router.push(`/patterns/${docRef.id}`);
-            }
+            router.push(`/patterns/${docRef.id}`);
         } catch (error) {
             console.error(error);
         }
@@ -103,7 +63,7 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
 
     return (
         <section className="Content">
-            <h2 className="Title  mb-8"> {mode === 'edit' ? '도안 수정하기' : '코바늘 도안 작성하기'}</h2>
+            <h2 className="Title  mb-8">코바늘 도안 작성하기</h2>
 
             <form onSubmit={handleSubmit}>
                 <div className="text-xl space-y-6">
@@ -128,11 +88,14 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
                     {/* 도안 */}
                     <div className="">
                         <p className="mb-2">도안</p>
+
                         <WritePattern key="text" items={items} setItems={setItems} />
                     </div>
 
                     {/* 버튼 */}
-                    <Button type="submit">{mode == 'edit' ? '수정' : '등록'}</Button>
+                    <div>
+                        <Button type="submit">등록</Button>
+                    </div>
                 </div>
             </form>
 

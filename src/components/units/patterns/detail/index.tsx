@@ -4,13 +4,12 @@ import { useParams } from 'next/navigation';
 import { doc, updateDoc, addDoc, collection } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
-import ImagePattern from './imagePattern';
 
-import { IimagePattern } from '@/types';
-import { CATEGORIES, CrochetSymbol } from '@/lib';
+import { CATEGORIES } from '@/lib';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
 import { usePatternDetail } from '@/hooks/usePattern';
+import Link from 'next/link';
 
 export default function PatternsDetail() {
     const params = useParams();
@@ -19,8 +18,6 @@ export default function PatternsDetail() {
     const { pattern, loading } = usePatternDetail(id);
 
     const [completedIds, setCompletedIds] = useState<string[]>([]);
-    const [imagePattern, setImagePattern] = useState<IimagePattern[] | null>(null);
-    const [isConverting, setIsConverting] = useState(false);
 
     const { uid } = useAuth();
 
@@ -51,40 +48,7 @@ export default function PatternsDetail() {
         }
     };
 
-    // 기호 도안 만들기
-    const handleSignPatten = async () => {
-        if (source || isConverting || !pattern) return;
-        if (imagePattern) return;
-
-        setIsConverting(true);
-        try {
-            {
-                CATEGORIES.find((el) => el.value === pattern.category)?.label;
-            }
-
-            // const res = await fetch('/api/gemini', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ content: pattern.items }),
-            // });
-            // const item = await res.json();
-            // setImagePattern(item.pattern);
-            // ai 결과 값 저장
-            if (!uid || !id) return;
-            const docRef = doc(db, 'patterns', id);
-            await updateDoc(docRef, {
-                // imagePattern: item.pattern,
-            });
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setIsConverting(false);
-        }
-    };
-
     if (!pattern) return;
-
-    const source = pattern?.imagePattern ?? imagePattern;
 
     return (
         <section className="Content ">
@@ -93,18 +57,10 @@ export default function PatternsDetail() {
                 <h2 className="text-xl font-semibold text-gray-900">{pattern.title}</h2>
                 <span className="mt-2 inline-block rounded-full bg-[#8FD3C3]/20 px-3 py-1 text-xs font-medium text-[#5FB8A6]">{CATEGORIES.find((el) => el.value === pattern.category)?.label}</span>
                 <p className="mt-4 text-lg text-gray-600 whitespace-pre-line leading-relaxed">{pattern.content}</p>
-                {/* <Button
-                    className={`mt-5 rounded-lg font-medium transition
-                    ${source ? 'bg-gray-200 text-gray-500 cursor-not-allowed' : 'bg-[#8FD3C3] text-white hover:bg-[#7acbbb]'} `}
-                    disabled={isConverting || !!source}
-                    onClick={handleSignPatten}
-                >
-                    {source ? '기호 도안 생성 완료' : isConverting ? '변환중...' : '기호 도안으로 보기'}
-                </Button> */}
             </div>
 
             {/* 작업 리스트 */}
-            <div className="mt-6 space-y-3 ">
+            <div className="mt-6 space-y-3 min-h-135">
                 {[...pattern.items].reverse().map((el) => {
                     const isDone = completedIds.includes(String(el.id));
 
@@ -133,12 +89,13 @@ export default function PatternsDetail() {
                 })}
             </div>
 
-            {/* 기호 도안 */}
-            {source && (
-                <div className="mt-6 ">
-                    <ImagePattern pattern={pattern} data={source} />
-                </div>
-            )}
+            {/* 버튼 */}
+            <div className="flex items-center justify-end gap-3 mt-5 ">
+                <Link className="h-10 px-4 py-2 rounded-lg bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97]" href={`/patterns/${pattern.id}/edit`}>
+                    수정
+                </Link>
+                <Button variant="close">삭제</Button>
+            </div>
         </section>
     );
 }

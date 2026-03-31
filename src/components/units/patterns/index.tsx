@@ -6,7 +6,7 @@ import { usePattern } from '@/hooks/usePattern';
 import Link from 'next/link';
 
 export default function Patterns() {
-    const { data } = usePattern();
+    const { data, loading } = usePattern();
 
     return (
         <section className="Content">
@@ -17,7 +17,15 @@ export default function Patterns() {
                 <Link href="/patterns/write">도안 작성하기</Link>
             </Button>
 
-            <PatternList data={data} />
+            {loading ? (
+                <div className="space-y-3">
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                        <div key={idx} className="w-full h-20 rounded-xl border border-gray-200 bg-[#eee]" />
+                    ))}
+                </div>
+            ) : (
+                <PatternList data={data} />
+            )}
         </section>
     );
 }
