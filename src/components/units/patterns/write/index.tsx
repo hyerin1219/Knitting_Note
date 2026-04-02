@@ -1,21 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 import WritePattern from './writePattern';
-
-import { SelectButtonGroup } from '@/components/ui/selectButton';
-import { Button } from '@/components/ui/button';
+import WriteForm from '../writeForm';
 
 import { useAuth } from '@/hooks/useAuth';
-
-import { CATEGORIES } from '@/lib';
+import { useAlert } from '@/hooks/useAlert';
 import { db } from '@/lib/firebase';
 import { IPatternItem, IFormState } from '@/types';
-import { useRouter } from 'next/navigation';
 
-import { useAlert } from '@/hooks/useAlert';
+import { Button } from '@/components/ui/button';
 import Alert from '@/components/ui/alert';
 
 interface IWriteProps {
@@ -38,7 +35,7 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
     useEffect(() => {
         if (mode === 'edit' && id) {
             const fetchData = async () => {
-                const docRef = doc(db, 'patterns', id);
+                const docRef = doc(db, 'patterns', 'Written', id);
                 const snap = await getDoc(docRef);
 
                 if (snap.exists()) {
@@ -58,10 +55,6 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
         }
     }, [mode, id]);
 
-    const handleChange = (key: keyof IFormState, value: string) => {
-        setForm((prev) => ({ ...prev, [key]: value }));
-    };
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -75,7 +68,7 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
         try {
             // 수정
             if (mode === 'edit' && id) {
-                const docRef = doc(db, 'patterns', id);
+                const docRef = doc(db, 'patterns', 'Written', id);
 
                 await updateDoc(docRef, {
                     ...form,
@@ -85,7 +78,7 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
                 router.push(`/patterns/${id}`);
             } else {
                 // 등록
-                const patternRef = collection(db, 'patterns');
+                const patternRef = collection(db, 'patterns', 'Written');
 
                 const docRef = await addDoc(patternRef, {
                     author: uid,
@@ -107,23 +100,7 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
 
             <form onSubmit={handleSubmit}>
                 <div className="text-xl space-y-6">
-                    {/* 제목 */}
-                    <div className="flex items-center gap-5">
-                        <label className="shrink-0">제목</label>
-                        <input value={form.title} onChange={(e) => handleChange('title', e.target.value)} placeholder="도안 제목을 입력하세요." className="w-full py-1 px-3 rounded-lg border border-gray-200 shadow-sm focus:ring-1 focus:ring-[#8FD3C3]/40" />
-                    </div>
-
-                    {/* 설명 */}
-                    <div className="">
-                        <label className="shrink-0">설명</label>
-                        <textarea value={form.content} onChange={(e) => handleChange('content', e.target.value)} placeholder="도안 설명을 적어주세요." className="w-full py-1 px-3 rounded-lg border border-gray-200 shadow-sm focus:ring-1 focus:ring-[#8FD3C3]/40" />
-                    </div>
-
-                    {/* 카테고리 */}
-                    <div>
-                        <p className="mb-2">카테고리</p>
-                        <SelectButtonGroup options={CATEGORIES} value={form.category} onChange={(val) => handleChange('category', val)} />
-                    </div>
+                    <WriteForm form={form} setForm={setForm} />
 
                     {/* 도안 */}
                     <div className="">

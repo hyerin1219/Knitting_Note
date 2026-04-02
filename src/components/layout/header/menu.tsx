@@ -16,6 +16,11 @@ export default function Menu({ open, onClose }: IProps) {
                     label: '서술 도안 작성하기',
                     href: '/patterns/write',
                 },
+
+                {
+                    label: '기호 도안 작성하기',
+                    href: '/patterns/writeImage',
+                },
             ],
         },
     ];

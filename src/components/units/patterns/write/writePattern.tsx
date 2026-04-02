@@ -74,7 +74,7 @@ export default function WritePattern({ items, setItems }: IProps) {
                         <div key={el.id} className="p-3 rounded-lg border border-gray-100 bg-white shadow-sm">
                             <div>
                                 <p className="font-bold">{el.rows} 단</p>
-                                <p className="text-[#888]">{el.text} 단</p>
+                                <p className="text-[#888]">{el.text}</p>
                             </div>
 
                             <div className="flex items-center justify-end gap-1">

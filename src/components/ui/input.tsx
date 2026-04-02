@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { Slot } from '@radix-ui/react-slot';
+
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
-const inputVariants = cva('w-20 py-1 px-3 rounded-lg border border-gray-200 shadow-sm focus:ring-1 focus:ring-[#8FD3C3]/40', {
+const inputVariants = cva('w-20 py-1 px-3 rounded-lg border border-gray-200 shadow-sm focus:outline-none focus:ring-1 focus:ring-[#8FD3C3]/40', {
     variants: {
         variant: {
             default: '',
             full: 'flex-1',
-            readyOnly: 'cursor-default pointer-events-none',
         },
         size: {
             default: '',

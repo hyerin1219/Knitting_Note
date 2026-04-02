@@ -15,7 +15,7 @@ export const CrochetSymbol = [
     { label: 'ch', value: '사슬뜨기' }, // 사슬뜨기
     { label: 'slst', value: '빼뜨기' }, // 빼뜨기
     { label: 'sc', value: '짧은뜨기' }, // 짧은뜨기
-    { label: 'scBlo', value: '이랑 짧은뜨기' }, // 이랑 짧은뜨기 (뒷고리)
+    { label: 'BLOsc', value: '이랑 짧은뜨기' }, // 이랑 짧은뜨기 (뒷고리)
     { label: 'reverseSc', value: '되돌아 짧은뜨기' }, // 되돌아 짧은뜨기 (크랩스티치)
 
     { label: 'dc', value: '긴뜨기' }, // 긴뜨기
