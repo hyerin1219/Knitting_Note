@@ -35,7 +35,7 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
     useEffect(() => {
         if (mode === 'edit' && id) {
             const fetchData = async () => {
-                const docRef = doc(db, 'patterns', 'Written', id);
+                const docRef = doc(db, 'patterns', id);
                 const snap = await getDoc(docRef);
 
                 if (snap.exists()) {
@@ -68,7 +68,7 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
         try {
             // 수정
             if (mode === 'edit' && id) {
-                const docRef = doc(db, 'patterns', 'Written', id);
+                const docRef = doc(db, 'patterns', id);
 
                 await updateDoc(docRef, {
                     ...form,
@@ -78,7 +78,7 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
                 router.push(`/patterns/${id}`);
             } else {
                 // 등록
-                const patternRef = collection(db, 'patterns', 'Written');
+                const patternRef = collection(db, 'patterns');
 
                 const docRef = await addDoc(patternRef, {
                     author: uid,

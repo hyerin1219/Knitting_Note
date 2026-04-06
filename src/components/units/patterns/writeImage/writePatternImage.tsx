@@ -12,44 +12,51 @@ type IProps = {
 };
 
 export default function WritePatternImage({ items, setItems }: IProps) {
-    const [rows, setRows] = useState<string[][]>([[]]);
+    const [rows, setRows] = useState<{ symbols: string[] }[]>([{ symbols: [] }]);
 
     const { showAlert, alertValue, triggerAlert } = useAlert();
 
     // 최종 도안 입력하기
     const handleAdd = () => {
-        // const isEmpty = rows.every((row) => row.length === 0);
-        // if (isEmpty) {
-        //     triggerAlert('도안을 입력해주세요.');
-        //     return;
-        // }
+        const isEmpty = rows.every((row) => row.symbols.length === 0);
 
-        setItems(rows[[]]);
+        if (isEmpty) {
+            triggerAlert('도안을 입력해주세요.');
+            return;
+        }
 
-        // 초기화
+        setItems((prev) => [
+            ...prev,
+            {
+                id: `${Date.now()}`,
+                rows,
+            },
+        ]);
 
-        setRows([[]]);
+        setRows([{ symbols: [] }]);
     };
-
     // 삭제하기
     const handleRemoveSymbol = (rowIdx: number, symbolIdx: number) => {
-        setRows((prev) => prev.map((row, i) => (i === rowIdx ? row.filter((_, j) => j !== symbolIdx) : row)));
+        setRows((prev) => prev.map((row, i) => (i === rowIdx ? { symbols: row.symbols.filter((_, j) => j !== symbolIdx) } : row)));
     };
 
-    // 추가
+    // 단 추가
     const handleAddSymbol = (value: string) => {
         setRows((prev) => {
             const newRows = [...prev];
-            newRows[newRows.length - 1] = [...newRows[newRows.length - 1], value];
+            const last = newRows[newRows.length - 1];
+
+            newRows[newRows.length - 1] = {
+                symbols: [...last.symbols, value],
+            };
+
             return newRows;
         });
-
-        console.log(rows);
     };
 
     // 확인
     const handleAddRow = () => {
-        setRows((prev) => [...prev, []]);
+        setRows((prev) => [...prev, { symbols: [] }]);
     };
 
     return (
@@ -73,18 +80,20 @@ export default function WritePatternImage({ items, setItems }: IProps) {
                     <div className="flex flex-col gap-2">
                         {rows.map((row, rowIdx) => (
                             <div key={rowIdx} className="flex items-center gap-2">
-                                {/* 단수 표시 */}
+                                {/* 단수 */}
                                 <span className="text-sm text-gray-500 w-6">{rowIdx + 1}단</span>
 
-                                {/* 심볼들 */}
+                                {/* 심볼 */}
                                 <div className="flex items-center gap-1 flex-wrap">
-                                    {row.map((el, idx) => (
+                                    {row.symbols.map((el, idx) => (
                                         <div key={idx}>
                                             <p className="text-center text-sm">{idx + 1}</p>
+
                                             <div className="relative w-10 h-10 p-1 rounded bg-gray-100 group">
                                                 <button type="button" onClick={() => handleRemoveSymbol(rowIdx, idx)} className="absolute -top-1 -right-1 w-4 h-4 text-xs text-center leading-[18px] bg-black text-white rounded-full hidden group-hover:block">
                                                     ×
                                                 </button>
+
                                                 <img src={`/images/stitch/${el}.png`} className="w-full h-full object-contain" alt={el} />
                                             </div>
                                         </div>
@@ -92,7 +101,6 @@ export default function WritePatternImage({ items, setItems }: IProps) {
                                 </div>
                             </div>
                         ))}
-
                         {/* 단 추가 버튼 */}
                         <Button type="button" size="sm" onClick={handleAddRow}>
                             단 추가

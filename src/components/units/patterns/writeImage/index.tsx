@@ -39,7 +39,7 @@ export default function PatternsWriteImage() {
         }
 
         try {
-            const patternRef = collection(db, 'patterns', 'images');
+            const patternRef = collection(db, 'ImagePatterns');
 
             const docRef = await addDoc(patternRef, {
                 author: uid,

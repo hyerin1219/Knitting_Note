@@ -30,12 +30,8 @@ export type IPattern = {
 };
 
 // ******************************* 기호 도안 type
+
 export type IPatternImageItem = {
-    // id: string; // 문서 id
-    // author: string; // 작가 uid
-    // title: string;
-    // content: string;
-    // category: string;
-    // createdAt: string;
-    items: string[][];
+    id: string; // 문서 id
+    rows: { symbols: string[] }[];
 };
