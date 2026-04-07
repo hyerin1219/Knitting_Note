@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 import WritePatternImage from './writePatternImage';
-import WriteForm from '../writeForm';
+import WriteForm from '../../../ui/writeForm';
 
 import { useAuth } from '@/hooks/useAuth';
 import { useAlert } from '@/hooks/useAlert';
@@ -48,7 +48,7 @@ export default function PatternsWriteImage() {
                 createdAt: new Date().toLocaleDateString(),
             });
 
-            router.push(`/patterns/${docRef.id}`);
+            router.push(`/imagePatterns/${docRef.id}`);
         } catch (error) {
             console.error(error);
         }

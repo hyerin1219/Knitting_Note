@@ -9,19 +9,28 @@ type IProps = {
 export default function Menu({ open, onClose }: IProps) {
     const menus = [
         {
-            label: '코바늘 도안',
-            href: '/patterns',
-            children: [
-                {
-                    label: '서술 도안 작성하기',
-                    href: '/patterns/write',
-                },
+            label: '메인',
+            href: '/',
+        },
+        {
+            label: '서술 도안 작성하기',
+            href: '/patterns/write',
+            // children: [
+            //     {
+            //         label: '서술 도안 작성하기',
+            //         href: '/patterns/write',
+            //     },
 
-                {
-                    label: '기호 도안 작성하기',
-                    href: '/patterns/writeImage',
-                },
-            ],
+            //     {
+            //         label: '기호 도안 작성하기',
+            //         href: '/imagePatterns/write',
+            //     },
+            // ],
+        },
+
+        {
+            label: '기호 도안 작성하기',
+            href: '/imagePatterns/write',
         },
     ];
     return (
@@ -50,7 +59,7 @@ export default function Menu({ open, onClose }: IProps) {
                                     {menu.label}
                                 </Link>
 
-                                {menu.children && (
+                                {/* {menu.children && (
                                     <ul className="ml-4 mt-2 space-y-1">
                                         {menu.children.map((sub) => (
                                             <li key={sub.href}>
@@ -60,7 +69,7 @@ export default function Menu({ open, onClose }: IProps) {
                                             </li>
                                         ))}
                                     </ul>
-                                )}
+                                )} */}
                             </li>
                         ))}
                     </ul>

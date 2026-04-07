@@ -1,4 +1,4 @@
-import PatternsWriteImage from '@/components/units/patterns/writeImage';
+import PatternsWriteImage from '@/components/units/imagePatterns/write';
 
 export default function PatternsWriteImagePage() {
     return <PatternsWriteImage />;

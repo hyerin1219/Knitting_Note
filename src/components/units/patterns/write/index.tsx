@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 
 import WritePattern from './writePattern';
-import WriteForm from '../writeForm';
+import WriteForm from '../../../ui/writeForm';
 
 import { useAuth } from '@/hooks/useAuth';
 import { useAlert } from '@/hooks/useAlert';

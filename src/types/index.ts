@@ -1,5 +1,3 @@
-import { CATEGORIES } from '@/lib';
-
 // 코바늘 도안 form 타입
 export type IFormState = {
     title: string;
@@ -32,6 +30,18 @@ export type IPattern = {
 // ******************************* 기호 도안 type
 
 export type IPatternImageItem = {
+    id: string;
+    symbols: string[];
+};
+
+export type IImagePattern = {
     id: string; // 문서 id
-    rows: { symbols: string[] }[];
+    author: string; // 작가 uid
+    title: string;
+    content: string;
+    category: string;
+    createdAt: string;
+    items: IPatternImageItem[];
+
+    completedIds: string[];
 };

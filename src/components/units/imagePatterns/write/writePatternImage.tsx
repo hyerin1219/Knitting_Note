@@ -12,7 +12,7 @@ type IProps = {
 };
 
 export default function WritePatternImage({ items, setItems }: IProps) {
-    const [rows, setRows] = useState<{ symbols: string[] }[]>([{ symbols: [] }]);
+    const [rows, setRows] = useState<{ id: string; symbols: string[] }[]>([{ id: `${Date.now()}`, symbols: [] }]);
 
     const { showAlert, alertValue, triggerAlert } = useAlert();
 
@@ -25,19 +25,23 @@ export default function WritePatternImage({ items, setItems }: IProps) {
             return;
         }
 
-        setItems((prev) => [
-            ...prev,
-            {
-                id: `${Date.now()}`,
-                rows,
-            },
-        ]);
+        setItems((prev) => [...prev, ...rows]);
 
-        setRows([{ symbols: [] }]);
+        setRows([{ id: `${Date.now()}`, symbols: [] }]);
     };
+
     // 삭제하기
     const handleRemoveSymbol = (rowIdx: number, symbolIdx: number) => {
-        setRows((prev) => prev.map((row, i) => (i === rowIdx ? { symbols: row.symbols.filter((_, j) => j !== symbolIdx) } : row)));
+        setRows((prev) =>
+            prev.map((row, i) =>
+                i === rowIdx
+                    ? {
+                          ...row,
+                          symbols: row.symbols.filter((_, j) => j !== symbolIdx),
+                      }
+                    : row
+            )
+        );
     };
 
     // 단 추가
@@ -47,6 +51,7 @@ export default function WritePatternImage({ items, setItems }: IProps) {
             const last = newRows[newRows.length - 1];
 
             newRows[newRows.length - 1] = {
+                ...last,
                 symbols: [...last.symbols, value],
             };
 
@@ -56,7 +61,7 @@ export default function WritePatternImage({ items, setItems }: IProps) {
 
     // 확인
     const handleAddRow = () => {
-        setRows((prev) => [...prev, { symbols: [] }]);
+        setRows((prev) => [...prev, { id: `${Date.now()}-${prev.length}`, symbols: [] }]);
     };
 
     return (

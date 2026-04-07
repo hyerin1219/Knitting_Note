@@ -12,11 +12,11 @@ import { usePatternDetail } from '@/hooks/usePattern';
 import Link from 'next/link';
 import { useImagePatternDetail } from '@/hooks/useImagePattern';
 
-export default function PatternsDetail() {
+export default function ImagePatternsDetail() {
     const params = useParams();
     const id = params?.id as string;
 
-    const { pattern, loading } = usePatternDetail(id);
+    const { pattern, loading } = useImagePatternDetail(id);
 
     const [completedIds, setCompletedIds] = useState<string[]>([]);
 
@@ -39,7 +39,7 @@ export default function PatternsDetail() {
         setCompletedIds(updated);
 
         try {
-            const docRef = doc(db, 'patterns', pattern.id);
+            const docRef = doc(db, 'ImagePatterns', pattern.id);
 
             await updateDoc(docRef, {
                 completedIds: updated,
@@ -49,7 +49,7 @@ export default function PatternsDetail() {
         }
     };
 
-    if (!pattern) return;
+    if (!pattern) return null;
 
     return (
         <section className="Content ">
@@ -62,7 +62,7 @@ export default function PatternsDetail() {
 
             {/* 작업 리스트 */}
             <div className="mt-6 space-y-3 min-h-135">
-                {[...pattern.items].reverse().map((el) => {
+                {[...pattern.items].reverse().map((el, i) => {
                     const isDone = completedIds.includes(String(el.id));
 
                     return (
@@ -74,8 +74,13 @@ export default function PatternsDetail() {
                         >
                             <div className="flex items-start justify-between gap-3">
                                 <div>
-                                    <p className={` text-sm font-semibold  ${isDone ? 'line-through text-gray-400' : 'text-gray-900'}`}>{el.rows} 단</p>
-                                    {!isDone && <p className="mt-1 text-sm text-gray-600">{el.text}</p>}
+                                    <p className={`text-sm font-semibold ${isDone ? 'line-through text-gray-400' : 'text-gray-900'}`}>{i + 1}단</p>
+
+                                    <div className="flex items-center gap-1">
+                                        {el.symbols.map((stitch, idx) => (
+                                            <img key={idx} className={`w-5 ${isDone ? 'grayscale brightness-75 opacity-30' : ''}`} src={`/images/stitch/${stitch}.png`} alt="" />
+                                        ))}
+                                    </div>
                                 </div>
 
                                 <div
