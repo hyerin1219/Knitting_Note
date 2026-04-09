@@ -1,76 +1,82 @@
-import { useState } from 'react';
-
-import { IPatternImageItem } from '@/types';
 import { CrochetSymbol } from '@/lib';
 import { useAlert } from '@/hooks/useAlert';
 import { Button } from '@/components/ui/button';
 import Alert from '@/components/ui/alert';
 
 type IProps = {
-    items: IPatternImageItem[];
-    setItems: React.Dispatch<React.SetStateAction<IPatternImageItem[]>>;
+    items: { id: string; row: number; symbols: string[] }[];
+    setItems: React.Dispatch<React.SetStateAction<{ id: string; row: number; symbols: string[] }[]>>;
 };
 
 export default function WritePatternImage({ items, setItems }: IProps) {
-    const [rows, setRows] = useState<{ id: string; symbols: string[] }[]>([{ id: `${Date.now()}`, symbols: [] }]);
-
     const { showAlert, alertValue, triggerAlert } = useAlert();
-
-    // 최종 도안 입력하기
-    const handleAdd = () => {
-        const isEmpty = rows.every((row) => row.symbols.length === 0);
-
-        if (isEmpty) {
-            triggerAlert('도안을 입력해주세요.');
-            return;
-        }
-
-        setItems((prev) => [...prev, ...rows]);
-
-        setRows([{ id: `${Date.now()}`, symbols: [] }]);
-    };
 
     // 삭제하기
     const handleRemoveSymbol = (rowIdx: number, symbolIdx: number) => {
-        setRows((prev) =>
-            prev.map((row, i) =>
+        setItems((prev) =>
+            prev.map((el, i) =>
                 i === rowIdx
                     ? {
-                          ...row,
-                          symbols: row.symbols.filter((_, j) => j !== symbolIdx),
+                          ...el,
+                          symbols: el.symbols.filter((_, j) => j !== symbolIdx),
                       }
-                    : row
+                    : el
             )
         );
     };
 
     // 단 추가
     const handleAddSymbol = (value: string) => {
-        setRows((prev) => {
-            const newRows = [...prev];
-            const last = newRows[newRows.length - 1];
+        setItems((prev) => {
+            if (prev.length === 0) {
+                return [
+                    {
+                        id: `${Date.now()}`,
+                        row: 1,
+                        symbols: [value],
+                    },
+                ];
+            }
 
-            newRows[newRows.length - 1] = {
-                ...last,
-                symbols: [...last.symbols, value],
-            };
+            return prev.map((item, idx) => {
+                if (idx !== prev.length - 1) return item;
 
-            return newRows;
+                return {
+                    ...item,
+                    symbols: [...item.symbols, value], //새 객체
+                };
+            });
         });
     };
 
     // 확인
     const handleAddRow = () => {
-        setRows((prev) => [...prev, { id: `${Date.now()}-${prev.length}`, symbols: [] }]);
+        setItems((prev) => [
+            ...prev,
+            {
+                id: `${Date.now()}`,
+                row: prev.length + 1,
+                symbols: [],
+            },
+        ]);
     };
 
     return (
         <div className="bg-white p-4 rounded-xl  border border-gray-100 shadow-sm">
             <div className="flex justify-between gap-2">
-                {/* 코바늘 기술 예시 */}
+                {/* 코바늘 기술 */}
                 <div className="grid grid-cols-3  gap-2  p-2">
                     {CrochetSymbol.map((el) => (
-                        <button type="button" onClick={() => handleAddSymbol(el.label)} className="relative flex items-center justify-center w-10 h-10 p-2 rounded-full group bg-[var(--color02)]" key={el.label}>
+                        <button
+                            type="button"
+                            onClick={(e) => {
+                                console.log('클릭됨');
+                                e.stopPropagation();
+                                handleAddSymbol(el.label);
+                            }}
+                            className="relative flex items-center justify-center w-10 h-10 p-2 rounded-full group bg-[var(--color02)]"
+                            key={el.label}
+                        >
                             <img className="w-full h-full object-contain" src={`/images/stitch/${el.label}.png`} alt="" />
                             <span className="absolute top-[110%] left-1/2 -translate-x-1/2 hidden group-hover:block whitespace-nowrap bg-black text-white text-sm px-2 py-1 rounded z-[1]">
                                 {el.value}
@@ -83,7 +89,7 @@ export default function WritePatternImage({ items, setItems }: IProps) {
                 {/* 단수 */}
                 <div className="flex-1 space-y-4 bg-gray-50 p-3 rounded-lg border border-gray-100">
                     <div className="flex flex-col gap-2">
-                        {rows.map((row, rowIdx) => (
+                        {items.map((row, rowIdx) => (
                             <div key={rowIdx} className="flex items-center gap-2">
                                 {/* 단수 */}
                                 <span className="text-sm text-gray-500 w-6">{rowIdx + 1}단</span>
@@ -113,10 +119,6 @@ export default function WritePatternImage({ items, setItems }: IProps) {
                     </div>
                 </div>
             </div>
-
-            <Button type="button" size="sm" onClick={handleAdd}>
-                확인
-            </Button>
 
             {showAlert && <Alert alertValue={alertValue} />}
         </div>

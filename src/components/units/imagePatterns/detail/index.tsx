@@ -64,6 +64,7 @@ export default function ImagePatternsDetail() {
             <div className="mt-6 space-y-3 min-h-135">
                 {[...pattern.items].reverse().map((el, i) => {
                     const isDone = completedIds.includes(String(el.id));
+                    // const total = pattern.items.length;
 
                     return (
                         <div
@@ -74,10 +75,10 @@ export default function ImagePatternsDetail() {
                         >
                             <div className="flex items-start justify-between gap-3">
                                 <div>
-                                    <p className={`text-sm font-semibold ${isDone ? 'line-through text-gray-400' : 'text-gray-900'}`}>{i + 1}단</p>
+                                    <p className={`text-sm font-semibold ${isDone ? 'line-through text-gray-400' : 'text-gray-900'}`}>{el.row}단</p>
 
                                     <div className="flex items-center gap-1">
-                                        {el.symbols.map((stitch, idx) => (
+                                        {el.symbols?.map((stitch, idx) => (
                                             <img key={idx} className={`w-5 ${isDone ? 'grayscale brightness-75 opacity-30' : ''}`} src={`/images/stitch/${stitch}.png`} alt="" />
                                         ))}
                                     </div>
@@ -97,7 +98,7 @@ export default function ImagePatternsDetail() {
 
             {/* 버튼 */}
             <div className="flex items-center justify-end gap-3 mt-5 ">
-                <Link className="h-10 px-4 py-2 rounded-lg bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97]" href={`/patterns/${pattern.id}/edit`}>
+                <Link className="h-10 px-4 py-2 rounded-lg bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97]" href={`/imagePatterns/${pattern.id}/edit`}>
                     수정
                 </Link>
                 <Button variant="close">삭제</Button>

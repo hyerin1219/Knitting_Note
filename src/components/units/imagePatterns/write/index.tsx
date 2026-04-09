@@ -10,16 +10,20 @@ import WriteForm from '../../../ui/writeForm';
 import { useAuth } from '@/hooks/useAuth';
 import { useAlert } from '@/hooks/useAlert';
 import { db } from '@/lib/firebase';
-import { IPatternItem, IFormState, IPatternImageItem } from '@/types';
+import { IFormState, IPatternImageItem } from '@/types';
 
 import { Button } from '@/components/ui/button';
 import Alert from '@/components/ui/alert';
 
-export default function PatternsWriteImage() {
+interface IWriteProps {
+    mode: 'submit' | 'edit';
+    id?: string;
+}
+
+export default function PatternsWriteImage({ mode, id }: IWriteProps) {
     const { uid } = useAuth();
     const { showAlert, alertValue, triggerAlert } = useAlert();
-
-    const [items, setItems] = useState<IPatternImageItem[]>([]);
+    const [items, setItems] = useState<IPatternImageItem[]>([{ id: `${Date.now()}`, row: 1, symbols: [] }]);
     const [form, setForm] = useState<IFormState>({
         title: '',
         category: '',
@@ -28,6 +32,30 @@ export default function PatternsWriteImage() {
 
     const router = useRouter();
 
+    useEffect(() => {
+        if (mode === 'edit' && id) {
+            const fetchData = async () => {
+                const docRef = doc(db, 'ImagePatterns', id);
+                const snap = await getDoc(docRef);
+
+                if (snap.exists()) {
+                    const data = snap.data();
+
+                    setForm({
+                        title: data.title || '',
+                        content: data.content || '',
+                        category: data.category || '',
+                    });
+
+                    setItems(data.items || []);
+                }
+            };
+
+            fetchData();
+        }
+    }, [mode, id]);
+
+    // 등록 하기
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -39,16 +67,30 @@ export default function PatternsWriteImage() {
         }
 
         try {
-            const patternRef = collection(db, 'ImagePatterns');
+            // 수정
+            if (mode === 'edit' && id) {
+                const docRef = doc(db, 'ImagePatterns', id);
 
-            const docRef = await addDoc(patternRef, {
-                author: uid,
-                ...form,
-                items,
-                createdAt: new Date().toLocaleDateString(),
-            });
+                await updateDoc(docRef, {
+                    ...form,
+                    items,
+                });
 
-            router.push(`/imagePatterns/${docRef.id}`);
+                router.push(`/imagePatterns/${id}`);
+            } else {
+                // 등록
+
+                const patternRef = collection(db, 'ImagePatterns');
+
+                const docRef = await addDoc(patternRef, {
+                    author: uid,
+                    ...form,
+                    items,
+                    createdAt: new Date().toLocaleDateString(),
+                });
+
+                router.push(`/imagePatterns/${docRef.id}`);
+            }
         } catch (error) {
             console.error(error);
         }
@@ -66,12 +108,11 @@ export default function PatternsWriteImage() {
                     {/* 도안 */}
                     <div className="">
                         <p className="mb-2">도안</p>
-
                         <WritePatternImage key="text" items={items} setItems={setItems} />
                     </div>
 
                     {/* 버튼 */}
-                    <Button type="submit">등록</Button>
+                    <Button type="submit">{mode == 'edit' ? '수정' : '등록'}</Button>
                 </div>
             </form>
 

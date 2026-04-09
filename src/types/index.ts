@@ -32,6 +32,7 @@ export type IPattern = {
 export type IPatternImageItem = {
     id: string;
     symbols: string[];
+    row: number;
 };
 
 export type IImagePattern = {

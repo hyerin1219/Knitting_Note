@@ -55,6 +55,7 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
         }
     }, [mode, id]);
 
+    // 등록 수정 하기
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
