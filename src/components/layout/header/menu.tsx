@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { useState } from 'react';
 
 type IProps = {
     open: boolean;
@@ -32,6 +31,10 @@ export default function Menu({ open, onClose }: IProps) {
             label: '기호 도안 작성하기',
             href: '/imagePatterns/write',
         },
+        {
+            label: '배색 도안 작성하기',
+            href: '/gridPatterns/write',
+        },
     ];
     return (
         <section className="">
@@ -43,7 +46,7 @@ export default function Menu({ open, onClose }: IProps) {
             />
 
             {/* 사이드 메뉴 */}
-            <div className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 z-[100] ${open ? 'translate-x-0' : '-translate-x-full'}`}>
+            <nav className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 z-[100] ${open ? 'translate-x-0' : '-translate-x-full'}`}>
                 <div className="p-4">
                     <button onClick={onClose} className="relative block w-6 h-6 group ml-auto" aria-label="메뉴 닫기">
                         <span className="absolute left-0 top-1/2 -translate-y-1/2 w-full h-1 rounded bg-black rotate-45 group-hover:rotate-0 transition-rotate duration-300" />
@@ -74,7 +77,7 @@ export default function Menu({ open, onClose }: IProps) {
                         ))}
                     </ul>
                 </div>
-            </div>
+            </nav>
         </section>
     );
 }

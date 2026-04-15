@@ -10,15 +10,18 @@ export default function Main() {
     const { data: imageData, loading: imageLoading } = useImagePattern();
     return (
         <section className="Content">
-            <h2 className="Title ">도안</h2>
+            <h2 className="Title sr-only">도안</h2>
 
             {/* 버튼 모음 */}
             <div className="flex items-center gap-3 mb-8">
                 <Link className="bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97] h-10 px-4 py-2 rounded-lg" href="/patterns/write">
                     서술 도안 작성하기
                 </Link>
-                <Link className="bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97] h-10 px-4 py-2 rounded-lg" href="/ImagePatterns/write">
+                <Link className="bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97] h-10 px-4 py-2 rounded-lg" href="/imagePatterns/write">
                     기호 도안 작성하기
+                </Link>
+                <Link className="bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97] h-10 px-4 py-2 rounded-lg" href="/gridPatterns/write">
+                    배색 도안 작성하기
                 </Link>
             </div>
 

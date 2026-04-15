@@ -46,3 +46,17 @@ export type IImagePattern = {
 
     completedIds: string[];
 };
+
+// ******************************* 배색 도안 type
+
+export type IPatternGridItem = {
+    color: string;
+    symbol: string | null;
+};
+
+export type IGirdPattern = {
+    author: string;
+    title: string;
+    createdAt: string;
+    items: IPatternGridItem[];
+};

@@ -1,9 +1,9 @@
 'use client';
 
-import { useAuth } from '@/hooks/useAuth';
-import Link from 'next/link';
-import Menu from './menu';
 import { useState } from 'react';
+import Link from 'next/link';
+import { useAuth } from '@/hooks/useAuth';
+import Menu from './menu';
 
 export default function Header() {
     const { user, isOpen, handleLogout, setIsOpen, handleLogin, loading } = useAuth();

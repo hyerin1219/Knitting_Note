@@ -4,55 +4,37 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 
-import WritePatternImage from './writePatternImage';
-import WriteForm from '../../../ui/writeForm';
-
 import { useAuth } from '@/hooks/useAuth';
 import { useAlert } from '@/hooks/useAlert';
 import { db } from '@/lib/firebase';
-import { IFormState, IPatternImageItem } from '@/types';
+import { IPatternGridItem } from '@/types';
 
 import { Button } from '@/components/ui/button';
 import Alert from '@/components/ui/alert';
+import { Input } from '@/components/ui/input';
+import WriteGridPattern from './writeGridPattern';
+import { title } from 'process';
 
 interface IWriteProps {
     mode: 'submit' | 'edit';
     id?: string;
 }
 
-type IProps = {
-    items: { id: string; row: number; symbols: string[] }[];
-    setItems: React.Dispatch<React.SetStateAction<{ id: string; row: number; symbols: string[] }[]>>;
-};
-
-export default function PatternsWriteImage({ mode, id }: IWriteProps) {
+export default function PatternsWriteGird({ mode, id }: IWriteProps) {
     const { uid } = useAuth();
     const { showAlert, alertValue, triggerAlert } = useAlert();
-    const [items, setItems] = useState<IPatternImageItem[]>([{ id: `${Date.now()}`, row: 1, symbols: [] }]);
-    const [form, setForm] = useState<IFormState>({
-        title: '',
-        category: '',
-        content: '',
-    });
-
+    const [items, setItems] = useState<IPatternGridItem[][]>([[]]);
+    const [title, setTitle] = useState('');
     const router = useRouter();
 
     useEffect(() => {
         if (mode === 'edit' && id) {
             const fetchData = async () => {
-                const docRef = doc(db, 'ImagePatterns', id);
+                const docRef = doc(db, 'GridPatterns', id);
                 const snap = await getDoc(docRef);
 
                 if (snap.exists()) {
                     const data = snap.data();
-
-                    setForm({
-                        title: data.title || '',
-                        content: data.content || '',
-                        category: data.category || '',
-                    });
-
-                    setItems(data.items || []);
                 }
             };
 
@@ -66,35 +48,36 @@ export default function PatternsWriteImage({ mode, id }: IWriteProps) {
 
         if (!uid) return;
 
-        if (!form.title || !form.category || !form.content || !items) {
-            triggerAlert('모든 칸을 입력해주세요.');
-            return;
-        }
-
         try {
             // 수정
             if (mode === 'edit' && id) {
-                const docRef = doc(db, 'ImagePatterns', id);
+                const docRef = doc(db, 'GridPatterns', id);
 
                 await updateDoc(docRef, {
-                    ...form,
+                    title,
                     items,
                 });
 
-                router.push(`/imagePatterns/${id}`);
+                router.push(`/GridPatterns/${id}`);
             } else {
                 // 등록
 
-                const patternRef = collection(db, 'ImagePatterns');
+                //  2차원 배열 items을 1차원
+                const flattenedItems = items.flat();
+                //  items의 가로 길이 저장
+                const gridWidth = items[0].length;
+
+                const patternRef = collection(db, 'GridPatterns');
 
                 const docRef = await addDoc(patternRef, {
                     author: uid,
-                    ...form,
-                    items,
+                    title,
+                    items: flattenedItems,
+                    gridWidth: gridWidth,
                     createdAt: new Date().toLocaleDateString(),
                 });
 
-                router.push(`/imagePatterns/${docRef.id}`);
+                router.push(`/gridPatterns/${docRef.id}`);
             }
         } catch (error) {
             console.error(error);
@@ -107,13 +90,15 @@ export default function PatternsWriteImage({ mode, id }: IWriteProps) {
 
             <form onSubmit={handleSubmit}>
                 <div className="text-xl space-y-6">
-                    {/* 제목 */}
-                    <WriteForm form={form} setForm={setForm} />
-
+                    <div className="flex items-center gap-3">
+                        <label>제목</label>
+                        <input value={title} onChange={(e) => setTitle(e.target.value)} type="text" className="flex-1 py-1 px-3 rounded-lg border border-gray-200 shadow-sm focus:outline-none focus:ring-1 focus:ring-[#8FD3C3]/40" placeholder="제목을 입력하세요." />
+                    </div>
                     {/* 도안 */}
                     <div className="">
                         <p className="mb-2">도안</p>
-                        <WritePatternImage key="text" items={items} setItems={setItems} />
+
+                        <WriteGridPattern items={items} setItems={setItems} />
                     </div>
 
                     {/* 버튼 */}

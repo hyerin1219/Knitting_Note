@@ -1,34 +1,36 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { doc, updateDoc } from 'firebase/firestore';
+import Link from 'next/link';
+import { doc, updateDoc, addDoc, collection } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
+
 import { CATEGORIES } from '@/lib';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
-import { usePatternDetail } from '@/hooks/usePattern';
 
-export default function PatternsDetail() {
+import { useGirdPatternDetail } from '@/hooks/useGridPattern';
+
+export default function GridPatternsDetail() {
     const params = useParams();
     const id = params?.id as string;
 
-    const { pattern, loading } = usePatternDetail(id);
+    const { pattern, loading } = useGirdPatternDetail(id);
 
     const [completedIds, setCompletedIds] = useState<string[]>([]);
 
-    // const { uid } = useAuth();
+    const { uid } = useAuth();
 
     useEffect(() => {
-        if (pattern?.completedIds) {
-            setCompletedIds(pattern.completedIds);
-        }
+        // if (pattern?.completedIds) {
+        //     setCompletedIds(pattern.completedIds);
+        // }
     }, [pattern]);
 
     // 단수 체크
     const handleToggleComplete = async (stepId: string) => {
-        if (!pattern?.id) return;
+        // if (!pattern?.id) return;
 
         const isNow = completedIds.includes(stepId);
 
@@ -36,31 +38,31 @@ export default function PatternsDetail() {
 
         setCompletedIds(updated);
 
-        try {
-            const docRef = doc(db, 'patterns', pattern.id);
+        // try {
+        //     const docRef = doc(db, 'gridPatterns', pattern.id);
 
-            await updateDoc(docRef, {
-                completedIds: updated,
-            });
-        } catch (error) {
-            console.error(error);
-        }
+        //     await updateDoc(docRef, {
+        //         completedIds: updated,
+        //     });
+        // } catch (error) {
+        //     console.error(error);
+        // }
     };
 
-    if (!pattern) return;
+    if (!pattern) return null;
+
+    // 1차원 데이터를 다시 2차원으로 나누는 로직
 
     return (
         <section className="Content ">
             {/* 상단 카드 */}
             <div className="relative mx-auto rounded-2xl border border-[#8FD3C3]/30 bg-gradient-to-br  from-[var(--color01)] to-white p-5 shadow-sm">
                 <h2 className="text-xl font-semibold text-gray-900">{pattern.title}</h2>
-                <span className="mt-2 inline-block rounded-full bg-[#8FD3C3]/20 px-3 py-1 text-xs font-medium text-[#5FB8A6]">{CATEGORIES.find((el) => el.value === pattern.category)?.label}</span>
-                <p className="mt-4 text-lg text-gray-600 whitespace-pre-line leading-relaxed">{pattern.content}</p>
             </div>
 
             {/* 작업 리스트 */}
-            <div className="mt-6 space-y-3 min-h-135">
-                {[...pattern.items].reverse().map((el) => {
+            {/* <div className="mt-6 space-y-3 min-h-135">
+                {[...pattern.items].reverse().map((el, i) => {
                     const isDone = completedIds.includes(String(el.id));
 
                     return (
@@ -72,8 +74,13 @@ export default function PatternsDetail() {
                         >
                             <div className="flex items-start justify-between gap-3">
                                 <div>
-                                    <p className={` text-sm font-semibold  ${isDone ? 'line-through text-gray-400' : 'text-gray-900'}`}>{el.rows} 단</p>
-                                    {!isDone && <p className="mt-1 text-sm text-gray-600">{el.text}</p>}
+                                    <p className={`text-sm font-semibold ${isDone ? 'line-through text-gray-400' : 'text-gray-900'}`}>{el.row}단</p>
+
+                                    <div className="flex items-center gap-1">
+                                        {el.symbols?.map((stitch, idx) => (
+                                            <img key={idx} className={`w-5 ${isDone ? 'grayscale brightness-75 opacity-30' : ''}`} src={`/images/stitch/${stitch}.png`} alt="" />
+                                        ))}
+                                    </div>
                                 </div>
 
                                 <div
@@ -86,13 +93,13 @@ export default function PatternsDetail() {
                         </div>
                     );
                 })}
-            </div>
+            </div> */}
 
             {/* 버튼 */}
             <div className="flex items-center justify-end gap-3 mt-5 ">
-                <Link className="h-10 px-4 py-2 rounded-lg bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97]" href={`/patterns/${pattern.id}/edit`}>
+                {/* <Link className="h-10 px-4 py-2 rounded-lg bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97]" href={`/gridPatterns/${pattern.id}/edit`}>
                     수정
-                </Link>
+                </Link> */}
                 <Button variant="close">삭제</Button>
             </div>
         </section>
