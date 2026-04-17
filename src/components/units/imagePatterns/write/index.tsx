@@ -20,10 +20,10 @@ interface IWriteProps {
     id?: string;
 }
 
-type IProps = {
-    items: { id: string; row: number; symbols: string[] }[];
-    setItems: React.Dispatch<React.SetStateAction<{ id: string; row: number; symbols: string[] }[]>>;
-};
+// type IProps = {
+//     items: { id: string; row: number; symbols: string[] }[];
+//     setItems: React.Dispatch<React.SetStateAction<{ id: string; row: number; symbols: string[] }[]>>;
+// };
 
 export default function PatternsWriteImage({ mode, id }: IWriteProps) {
     const { uid } = useAuth();

@@ -4,10 +4,13 @@ import Link from 'next/link';
 import PatternList from '@/components/ui/patternList';
 import { useImagePattern } from '@/hooks/useImagePattern';
 import { usePattern } from '@/hooks/usePattern';
+import { useGridPattern } from '@/hooks/useGridPattern';
 
 export default function Main() {
     const { data, loading } = usePattern();
     const { data: imageData, loading: imageLoading } = useImagePattern();
+    const { data: gridData, loading: gridLoading } = useGridPattern();
+
     return (
         <section className="Content">
             <h2 className="Title sr-only">도안</h2>
@@ -26,31 +29,57 @@ export default function Main() {
             </div>
 
             {/* 서술 도안 */}
-            <div className="flex items-start justify-between gap-2 mt-8">
+            <div className="flex items-start justify-between gap-2 mt-8 ">
                 <div className="w-[50%] overflow-y-auto p-2">
                     <h3 className="text-2xl mb-2 text-center">서술 도안</h3>
-                    {loading ? (
-                        <div className="space-y-3">
-                            {Array.from({ length: 5 }).map((_, idx) => (
-                                <div key={idx} className="w-full h-20 rounded-xl border border-gray-200 bg-[#eee]" />
-                            ))}
-                        </div>
+                    {data ? (
+                        loading ? (
+                            <div className="space-y-3">
+                                {Array.from({ length: 5 }).map((_, idx) => (
+                                    <div key={idx} className="w-full h-20 rounded-xl border border-gray-200 bg-[#eee]" />
+                                ))}
+                            </div>
+                        ) : (
+                            <PatternList type="written" data={data} />
+                        )
                     ) : (
-                        <PatternList type="written" data={data} />
+                        <div>도안을 등록해 보세요.</div>
                     )}
                 </div>
 
                 {/* 이미지 도안 */}
                 <div className="w-[50%] overflow-y-auto p-2">
                     <h3 className="text-2xl mb-2 text-center">기호 도안</h3>
-                    {imageLoading ? (
-                        <div className="space-y-3">
-                            {Array.from({ length: 5 }).map((_, idx) => (
-                                <div key={idx} className="w-full h-20 rounded-xl border border-gray-200 bg-[#eee]" />
-                            ))}
-                        </div>
+                    {imageData ? (
+                        imageLoading ? (
+                            <div className="space-y-3">
+                                {Array.from({ length: 5 }).map((_, idx) => (
+                                    <div key={idx} className="w-full h-20 rounded-xl border border-gray-200 bg-[#eee]" />
+                                ))}
+                            </div>
+                        ) : (
+                            <PatternList type="image" data={imageData} />
+                        )
                     ) : (
-                        <PatternList type="image" data={imageData} />
+                        <div>도안을 등록해 보세요.</div>
+                    )}
+                </div>
+
+                {/* 배색 도안 */}
+                <div className="w-[50%] overflow-y-auto p-2">
+                    <h3 className="text-2xl mb-2 text-center">기호 도안</h3>
+                    {gridData ? (
+                        gridLoading ? (
+                            <div className="space-y-3">
+                                {Array.from({ length: 5 }).map((_, idx) => (
+                                    <div key={idx} className="w-full h-20 rounded-xl border border-gray-200 bg-[#eee]" />
+                                ))}
+                            </div>
+                        ) : (
+                            <PatternList type="grid" data={gridData} />
+                        )
+                    ) : (
+                        <div>도안을 등록해 보세요.</div>
                     )}
                 </div>
             </div>

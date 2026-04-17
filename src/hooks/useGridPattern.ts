@@ -17,6 +17,7 @@ export function useGridPattern() {
                 const querySnapshot = await getDocs(q);
 
                 const results = querySnapshot.docs.map((doc) => ({
+                    id: doc.id,
                     ...doc.data(),
                 })) as IGirdPattern[];
 

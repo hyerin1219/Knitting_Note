@@ -2,11 +2,10 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { doc, updateDoc, addDoc, collection } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
 
-import { CATEGORIES } from '@/lib';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -76,7 +75,7 @@ export default function GridPatternsDetail() {
                                     className={`relative grid w-fit mx-auto cursor-pointer transition-all duration-200 group hover:bg-emerald-50/30`}
                                 >
                                     {row.map((cell) => (
-                                        <div key={cell.id} style={{ backgroundColor: isDone ? '#eee' : cell.color }} className={`flex items-center justify-center w-[30px] h-[30px] border border-gray-100  group-hover:border-emerald-200/50 `}>
+                                        <div key={cell.id} style={{ backgroundColor: isDone ? '#eee' : cell.color }} className={`flex items-center justify-center w-[30px] h-[30px] border  border-[#ccc]  group-hover:border-emerald-200/50 `}>
                                             {cell.symbol && <img src={`/images/stitch/${cell.symbol}.png`} className={`w-[85%] h-[85%] object-contain pointer-events-none drop-shadow-sm ${isDone ? 'opacity-20' : ''}`} alt={cell.symbol} />}
                                         </div>
                                     ))}

@@ -1,14 +1,14 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { doc, updateDoc, addDoc, collection } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 
 import { Button } from '@/components/ui/button';
 
 import { CATEGORIES } from '@/lib';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/hooks/useAuth';
-import { usePatternDetail } from '@/hooks/usePattern';
+
 import Link from 'next/link';
 import { useImagePatternDetail } from '@/hooks/useImagePattern';
 

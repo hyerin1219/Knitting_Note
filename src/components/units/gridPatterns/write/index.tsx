@@ -11,9 +11,8 @@ import { IPatternGridItem } from '@/types';
 
 import { Button } from '@/components/ui/button';
 import Alert from '@/components/ui/alert';
-import { Input } from '@/components/ui/input';
+
 import WriteGridPattern from './writeGridPattern';
-import { title } from 'process';
 
 interface IWriteProps {
     mode: 'submit' | 'edit';
@@ -35,6 +34,9 @@ export default function PatternsWriteGird({ mode, id }: IWriteProps) {
 
                 if (snap.exists()) {
                     const data = snap.data();
+
+                    setTitle(title);
+                    setItems(data.items);
                 }
             };
 
@@ -58,7 +60,7 @@ export default function PatternsWriteGird({ mode, id }: IWriteProps) {
                     items,
                 });
 
-                router.push(`/GridPatterns/${id}`);
+                router.push(`/gridPatterns/${id}`);
             } else {
                 // 등록
 
