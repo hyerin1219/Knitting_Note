@@ -52,11 +52,16 @@ export type IImagePattern = {
 export type IPatternGridItem = {
     color: string;
     symbol: string | null;
+    id: string;
 };
 
 export type IGirdPattern = {
+    id: string;
     author: string;
     title: string;
     createdAt: string;
-    items: IPatternGridItem[];
+    gridWidth: number;
+    items: IPatternGridItem[][];
+
+    completedIds: string[];
 };

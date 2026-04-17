@@ -32,7 +32,7 @@ export default function WritePatternImage({ items, setItems }: IProps) {
             if (prev.length === 0) {
                 return [
                     {
-                        id: `${Date.now()}`,
+                        id: crypto.randomUUID(),
                         row: 1,
                         symbols: [value],
                     },

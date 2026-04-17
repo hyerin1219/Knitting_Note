@@ -37,6 +37,7 @@ export function useGridPattern() {
 export function useGirdPatternDetail(id: string) {
     const [pattern, setPattern] = useState<IGirdPattern | null>(null);
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         const fetchDetail = async () => {
             if (!id) return;
@@ -44,8 +45,23 @@ export function useGirdPatternDetail(id: string) {
             try {
                 const docRef = doc(db, 'GridPatterns', id);
                 const docSnap = await getDoc(docRef);
+
                 if (docSnap.exists()) {
-                    setPattern({ ...docSnap.data() } as IGirdPattern);
+                    const rawData = docSnap.data();
+                    const flatItems = rawData.items || [];
+                    const width = rawData.gridWidth || 5;
+
+                    // 변환 로직
+                    const chunkedItems = [];
+                    for (let i = 0; i < flatItems.length; i += width) {
+                        chunkedItems.push(flatItems.slice(i, i + width));
+                    }
+
+                    setPattern({
+                        id: docSnap.id,
+                        ...rawData,
+                        items: chunkedItems,
+                    } as IGirdPattern);
                 }
             } catch (error) {
                 console.error('Error fetching detail:', error);
@@ -55,5 +71,6 @@ export function useGirdPatternDetail(id: string) {
         };
         fetchDetail();
     }, [id]);
+
     return { pattern, loading };
 }

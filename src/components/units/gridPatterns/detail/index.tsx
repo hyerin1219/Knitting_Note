@@ -23,35 +23,33 @@ export default function GridPatternsDetail() {
     const { uid } = useAuth();
 
     useEffect(() => {
-        // if (pattern?.completedIds) {
-        //     setCompletedIds(pattern.completedIds);
-        // }
+        if (pattern?.completedIds) {
+            setCompletedIds(pattern.completedIds);
+        }
     }, [pattern]);
 
     // 단수 체크
     const handleToggleComplete = async (stepId: string) => {
-        // if (!pattern?.id) return;
-
+        if (!pattern?.id) return;
+        console.log('클릭됨');
         const isNow = completedIds.includes(stepId);
 
         const updated = isNow ? completedIds.filter((v) => v !== stepId) : [...completedIds, stepId];
 
         setCompletedIds(updated);
 
-        // try {
-        //     const docRef = doc(db, 'gridPatterns', pattern.id);
+        try {
+            const docRef = doc(db, 'GridPatterns', pattern?.id);
 
-        //     await updateDoc(docRef, {
-        //         completedIds: updated,
-        //     });
-        // } catch (error) {
-        //     console.error(error);
-        // }
+            await updateDoc(docRef, {
+                completedIds: updated,
+            });
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     if (!pattern) return null;
-
-    // 1차원 데이터를 다시 2차원으로 나누는 로직
 
     return (
         <section className="Content ">
@@ -61,45 +59,38 @@ export default function GridPatternsDetail() {
             </div>
 
             {/* 작업 리스트 */}
-            {/* <div className="mt-6 space-y-3 min-h-135">
-                {[...pattern.items].reverse().map((el, i) => {
-                    const isDone = completedIds.includes(String(el.id));
+            <div className="mt-6 space-y-3min-h-155">
+                <div className="overflow-x-auto ">
+                    <div className="shadow-md bg-white ring-1 ring-gray-200">
+                        {pattern.items.map((row, rIdx) => {
+                            const isDone = completedIds.includes(String(rIdx));
 
-                    return (
-                        <div
-                            key={el.id}
-                            onClick={() => handleToggleComplete(String(el.id))}
-                            className={` group cursor-pointer rounded-xl border p-4 transition
-                            ${isDone ? 'bg-[#8FD3C3]/20 border-[#8FD3C3]' : 'bg-white border-gray-200 hover:shadow-sm'}  `}
-                        >
-                            <div className="flex items-start justify-between gap-3">
-                                <div>
-                                    <p className={`text-sm font-semibold ${isDone ? 'line-through text-gray-400' : 'text-gray-900'}`}>{el.row}단</p>
-
-                                    <div className="flex items-center gap-1">
-                                        {el.symbols?.map((stitch, idx) => (
-                                            <img key={idx} className={`w-5 ${isDone ? 'grayscale brightness-75 opacity-30' : ''}`} src={`/images/stitch/${stitch}.png`} alt="" />
-                                        ))}
-                                    </div>
-                                </div>
-
+                            return (
                                 <div
-                                    className={`mt-1 h-5 w-5 shrink-0 rounded-full border flex items-center justify-center
-                                    ${isDone ? 'bg-[#8FD3C3] border-[#8FD3C3]' : 'border-gray-300 group-hover:border-[#8FD3C3]'}`}
+                                    key={rIdx}
+                                    role="button"
+                                    onClick={() => handleToggleComplete(String(rIdx))}
+                                    style={{
+                                        gridTemplateColumns: `repeat(${pattern.gridWidth}, 30px)`,
+                                    }}
+                                    className={`relative grid w-fit mx-auto cursor-pointer transition-all duration-200 group hover:bg-emerald-50/30`}
                                 >
-                                    {isDone && <div className="h-2.5 w-2.5 rounded-full bg-white" />}
+                                    {row.map((cell) => (
+                                        <div key={cell.id} style={{ backgroundColor: isDone ? '#eee' : cell.color }} className={`flex items-center justify-center w-[30px] h-[30px] border border-gray-100  group-hover:border-emerald-200/50 `}>
+                                            {cell.symbol && <img src={`/images/stitch/${cell.symbol}.png`} className={`w-[85%] h-[85%] object-contain pointer-events-none drop-shadow-sm ${isDone ? 'opacity-20' : ''}`} alt={cell.symbol} />}
+                                        </div>
+                                    ))}
                                 </div>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div> */}
-
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
             {/* 버튼 */}
             <div className="flex items-center justify-end gap-3 mt-5 ">
-                {/* <Link className="h-10 px-4 py-2 rounded-lg bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97]" href={`/gridPatterns/${pattern.id}/edit`}>
+                <Link className="h-10 px-4 py-2 rounded-lg bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97]" href={`/gridPatterns/${pattern.id}/edit`}>
                     수정
-                </Link> */}
+                </Link>
                 <Button variant="close">삭제</Button>
             </div>
         </section>

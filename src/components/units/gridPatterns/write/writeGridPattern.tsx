@@ -9,15 +9,17 @@ type IProps = {
 };
 
 export default function WriteGridPattern({ setItems }: IProps) {
+    const CreateEmptyCell = (): IPatternGridItem => ({
+        id: crypto.randomUUID(),
+        color: '#ffffff',
+        symbol: null,
+    });
+
     const [grid, setGrid] = useState<IPatternGridItem[][]>(
         // 기본 5x5
         Array(5)
             .fill(null)
-            .map(() =>
-                Array(5)
-                    .fill(null)
-                    .map(() => ({ color: '#ffffff', symbol: null }))
-            )
+            .map(() => Array(5).fill(null).map(CreateEmptyCell))
     );
     // 색깔 선택
     const [color, setColor] = useState('#FAF3BE');
@@ -28,18 +30,13 @@ export default function WriteGridPattern({ setItems }: IProps) {
 
     // 행 추가
     const addRow = () => {
-        const newRow = Array(grid[0].length)
-            .fill(null)
-            .map(() => ({
-                color: '#ffffff',
-                symbol: null,
-            }));
+        const newRow = Array(grid[0].length).fill(null).map(CreateEmptyCell);
         setGrid([...grid, newRow]);
     };
 
     // 열 추가
     const addCol = () => {
-        setGrid(grid.map((row) => [...row, { color: '#ffffff', symbol: null }]));
+        setGrid(grid.map((row) => [...row, CreateEmptyCell()]));
     };
 
     // 색상을 바꿀 때 실행할 함수
@@ -51,7 +48,7 @@ export default function WriteGridPattern({ setItems }: IProps) {
     // 기호를 바꿀 때 실행할 함수
     const handleSymbolChange = (newSymbol: string) => {
         setSymbol(newSymbol);
-        setTool('stitch'); // 기기호 모드
+        setTool('stitch'); // 기호 모드
     };
 
     // 칸 클릭 시 상태 변경
@@ -60,10 +57,10 @@ export default function WriteGridPattern({ setItems }: IProps) {
         const targetCell = { ...newGrid[rIdx][cIdx] };
 
         if (tool === 'paint') {
-            // 색칠 모드: 배경색 업데이트 (이미 있으면 하얀색)
+            // 색칠 모드: 배경색 업데이트 (있으면 하얀색)
             targetCell.color = targetCell.color === color ? '#ffffff' : color;
         } else {
-            // 기호 모드: 기호 업데이트 (이미 있으면 제거)
+            // 기호 모드: 기호 업데이트 (있으면 제거)
             targetCell.symbol = targetCell.symbol === symbol ? null : symbol;
         }
 
@@ -76,11 +73,7 @@ export default function WriteGridPattern({ setItems }: IProps) {
         setGrid(
             Array(5)
                 .fill(null)
-                .map(() =>
-                    Array(5)
-                        .fill(null)
-                        .map(() => ({ color: '#ffffff', symbol: null }))
-                )
+                .map(() => Array(5).fill(null).map(CreateEmptyCell))
         );
     };
     console.log(grid);
@@ -127,7 +120,7 @@ export default function WriteGridPattern({ setItems }: IProps) {
                             <div
                                 role="button"
                                 className="flex items-center justify-center  w-[25px] h-[25px] border border-[#ccc] p-1 cursor-pointer"
-                                key={`${rIdx}-${cIdx}`}
+                                key={cell.id}
                                 onClick={() => handleCell(rIdx, cIdx)}
                                 style={{
                                     backgroundColor: cell.color,
