@@ -58,7 +58,7 @@ export default function GridPatternsDetail() {
             </div>
 
             {/* 작업 리스트 */}
-            <div className="mt-6 space-y-3min-h-155">
+            <div className="mt-6 space-y-3 min-h-155">
                 <div className="overflow-x-auto ">
                     <div className="shadow-md bg-white ring-1 ring-gray-200">
                         {pattern.items.map((row, rIdx) => {

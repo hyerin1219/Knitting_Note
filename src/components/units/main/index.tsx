@@ -11,6 +11,10 @@ export default function Main() {
     const { data: imageData, loading: imageLoading } = useImagePattern();
     const { data: gridData, loading: gridLoading } = useGridPattern();
 
+    console.log('data', data.length);
+    console.log('imageData', imageData);
+    console.log('gridData', gridData);
+
     return (
         <section className="Content">
             <h2 className="Title sr-only">도안</h2>
@@ -30,9 +34,9 @@ export default function Main() {
 
             {/* 서술 도안 */}
             <div className="flex items-start justify-between gap-2 mt-8 ">
-                <div className="w-[50%] overflow-y-auto p-2">
+                <div className="flex-1">
                     <h3 className="text-2xl mb-2 text-center">서술 도안</h3>
-                    {data ? (
+                    {data.length !== 0 ? (
                         loading ? (
                             <div className="space-y-3">
                                 {Array.from({ length: 5 }).map((_, idx) => (
@@ -43,14 +47,14 @@ export default function Main() {
                             <PatternList type="written" data={data} />
                         )
                     ) : (
-                        <div>도안을 등록해 보세요.</div>
+                        <div className="text-center text-[#999]">도안을 등록해 보세요.</div>
                     )}
                 </div>
 
                 {/* 이미지 도안 */}
-                <div className="w-[50%] overflow-y-auto p-2">
+                <div className="flex-1">
                     <h3 className="text-2xl mb-2 text-center">기호 도안</h3>
-                    {imageData ? (
+                    {imageData.length !== 0 ? (
                         imageLoading ? (
                             <div className="space-y-3">
                                 {Array.from({ length: 5 }).map((_, idx) => (
@@ -61,14 +65,14 @@ export default function Main() {
                             <PatternList type="image" data={imageData} />
                         )
                     ) : (
-                        <div>도안을 등록해 보세요.</div>
+                        <div className="text-center text-[#999]">도안을 등록해 보세요.</div>
                     )}
                 </div>
 
                 {/* 배색 도안 */}
-                <div className="w-[50%] overflow-y-auto p-2">
-                    <h3 className="text-2xl mb-2 text-center">기호 도안</h3>
-                    {gridData ? (
+                <div className="flex-1">
+                    <h3 className="text-2xl mb-2 text-center">배색 도안</h3>
+                    {gridData.length !== 0 ? (
                         gridLoading ? (
                             <div className="space-y-3">
                                 {Array.from({ length: 5 }).map((_, idx) => (
@@ -79,7 +83,7 @@ export default function Main() {
                             <PatternList type="grid" data={gridData} />
                         )
                     ) : (
-                        <div>도안을 등록해 보세요.</div>
+                        <div className="text-center text-[#999]">도안을 등록해 보세요.</div>
                     )}
                 </div>
             </div>

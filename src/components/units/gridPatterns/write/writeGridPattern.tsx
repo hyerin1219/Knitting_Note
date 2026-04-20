@@ -9,6 +9,23 @@ type IProps = {
 };
 
 export default function WriteGridPattern({ setItems }: IProps) {
+    const [isMouseDown, setIsMouseDown] = useState(false);
+    // 색깔 선택
+    const [color, setColor] = useState('#FAF3BE');
+    // 기호 선택
+    const [symbol, setSymbol] = useState('');
+    // 현재 도구 모드
+    const [tool, setTool] = useState<'paint' | 'stitch'>('paint');
+
+    // 마우스 클릭 떼는 동작 감지하기
+    useEffect(() => {
+        const handleGlobalMouseUp = () => setIsMouseDown(false);
+
+        window.addEventListener('mouseup', handleGlobalMouseUp);
+        return () => window.removeEventListener('mouseup', handleGlobalMouseUp);
+    }, []);
+
+    // 셀 한칸
     const CreateEmptyCell = (): IPatternGridItem => ({
         id: crypto.randomUUID(),
         color: '#ffffff',
@@ -21,12 +38,6 @@ export default function WriteGridPattern({ setItems }: IProps) {
             .fill(null)
             .map(() => Array(5).fill(null).map(CreateEmptyCell))
     );
-    // 색깔 선택
-    const [color, setColor] = useState('#FAF3BE');
-    // 기호 선택
-    const [symbol, setSymbol] = useState('');
-    // 현재 도구 모드
-    const [tool, setTool] = useState<'paint' | 'stitch'>('paint');
 
     // 행 추가
     const addRow = () => {
@@ -118,6 +129,14 @@ export default function WriteGridPattern({ setItems }: IProps) {
                     {grid.map((row, rIdx) =>
                         row.map((cell, cIdx) => (
                             <div
+                                onMouseDown={() => {
+                                    setIsMouseDown(true);
+                                    handleCell(rIdx, cIdx);
+                                }}
+                                onMouseEnter={() => {
+                                    if (isMouseDown) handleCell(rIdx, cIdx);
+                                }}
+                                onDragStart={(e) => e.preventDefault()}
                                 role="button"
                                 className="flex items-center justify-center  w-[25px] h-[25px] border border-[#ccc] p-1 cursor-pointer"
                                 key={cell.id}

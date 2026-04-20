@@ -13,9 +13,9 @@ export default function PatternCard({ data, type }: IProps) {
         grid: 'gridPatterns',
     };
     return (
-        <div className="space-y-3">
+        <div className="space-y-3 overflow-y-auto p-2">
             {data.map((el) => (
-                <Link key={el.id} href={`/${pathMap[type]}/${el.id}`} className="w-full group flex items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-4 transition hover:border-[#8FD3C3] hover:shadow-md">
+                <Link key={el.id} href={`/${pathMap[type]}/${el.id}`} className="w-full group flex flex-col items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-4 transition hover:border-[#8FD3C3] hover:shadow-md md:flex-row">
                     {/* 왼쪽 */}
                     <span className="text-base font-semibold text-gray-900 transition group-hover:text-[#8FD3C3]">{el.title}</span>
 
