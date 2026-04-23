@@ -18,8 +18,6 @@ export default function PatternsDetail() {
 
     const [completedIds, setCompletedIds] = useState<string[]>([]);
 
-    // const { uid } = useAuth();
-
     useEffect(() => {
         if (pattern?.completedIds) {
             setCompletedIds(pattern.completedIds);

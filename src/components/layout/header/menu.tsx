@@ -35,6 +35,10 @@ export default function Menu({ open, onClose }: IProps) {
             label: '배색 도안 작성하기',
             href: '/gridPatterns/write',
         },
+        {
+            label: '방구석 뜨개방',
+            href: '/onlineCrochetCircle',
+        },
     ];
     return (
         <section className="">
