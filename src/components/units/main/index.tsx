@@ -11,10 +11,6 @@ export default function Main() {
     const { data: imageData, loading: imageLoading } = useImagePattern();
     const { data: gridData, loading: gridLoading } = useGridPattern();
 
-    console.log('data', data.length);
-    console.log('imageData', imageData);
-    console.log('gridData', gridData);
-
     return (
         <section className="Content">
             <h2 className="Title sr-only">도안</h2>

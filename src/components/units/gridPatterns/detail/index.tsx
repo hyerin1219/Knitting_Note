@@ -30,7 +30,7 @@ export default function GridPatternsDetail() {
     // 단수 체크
     const handleToggleComplete = async (stepId: string) => {
         if (!pattern?.id) return;
-        console.log('클릭됨');
+
         const isNow = completedIds.includes(stepId);
 
         const updated = isNow ? completedIds.filter((v) => v !== stepId) : [...completedIds, stepId];

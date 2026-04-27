@@ -11,7 +11,6 @@ export default function SelectCrochetSymbol({ clickEvent }: IProps) {
                 <button
                     type="button"
                     onClick={(e) => {
-                        // console.log('클릭됨');
                         e.stopPropagation();
                         clickEvent(el.label);
                     }}

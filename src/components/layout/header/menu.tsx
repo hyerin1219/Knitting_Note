@@ -37,7 +37,7 @@ export default function Menu({ open, onClose }: IProps) {
         },
         {
             label: '방구석 뜨개방',
-            href: '/onlineCrochetCircle',
+            href: '/onlineCrochetCircle/create',
         },
     ];
     return (
