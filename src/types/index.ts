@@ -65,3 +65,20 @@ export type IGirdPattern = {
 
     completedIds: string[];
 };
+
+// ******************************* 뜨개방 type
+
+export type ICrochetCircleItem = {
+    title: string;
+    passwords: string;
+};
+export type ICrochetCircle = {
+    author: string;
+    createdAt: string;
+    id: string;
+    room: ICrochetCircleItem[];
+    member: [];
+    memberCount: number;
+    title: string;
+    passwords: string;
+};
