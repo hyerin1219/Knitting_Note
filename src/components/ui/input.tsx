@@ -3,7 +3,7 @@ import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
-const inputVariants = cva('w-20 py-1 px-3 rounded-lg border border-gray-200 shadow-sm focus:outline-none focus:ring-1 focus:ring-[#8FD3C3]/40', {
+const inputVariants = cva('w-20 py-1 px-3 rounded-lg border border-gray-200 shadow-sm focus:outline-none focus:ring-1 focus:ring-[var(--color04)]', {
     variants: {
         variant: {
             default: '',

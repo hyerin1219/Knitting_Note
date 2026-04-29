@@ -9,7 +9,7 @@ export const CATEGORIES = [
 ] as const;
 
 // 코바늘 기호
-export const CrochetSymbol = [
+export const CROCHETSYMBOL = [
     { label: 'mr', value: '매직링' }, // 매직링
 
     { label: 'ch', value: '사슬뜨기' }, // 사슬뜨기
@@ -41,4 +41,17 @@ export const CrochetSymbol = [
     { label: 'wrappedDc', value: '감아뜨기' }, // 감아뜨기 (릴리프/케이블)
     { label: 'mesh', value: '그물뜨기' }, // 그물뜨기
     { label: 'scBobble', value: '짧은뜨기 구슬뜨기' }, // 짧은뜨기 구슬뜨기
+] as const;
+
+// 캐릭터
+export const CHARACTER = [
+    { value: 'cat', label: '고양이' },
+    { value: 'koala', label: '코알라' },
+    { value: 'rabbit', label: '토끼' },
+    { value: 'penguin', label: '펭귄' },
+    { value: 'panda', label: '판다' },
+    { value: 'fox', label: '여우' },
+    { value: 'dog', label: '강아지' },
+    { value: 'frog', label: '개구리' },
+    { value: 'ham', label: '햄스터' },
 ] as const;

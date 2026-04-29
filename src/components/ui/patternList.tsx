@@ -15,9 +15,9 @@ export default function PatternCard({ data, type }: IProps) {
     return (
         <div className="space-y-3 overflow-y-auto p-2">
             {data.map((el) => (
-                <Link key={el.id} href={`/${pathMap[type]}/${el.id}`} className="w-full group flex flex-col items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-4 transition hover:border-[#8FD3C3] hover:shadow-md md:flex-row">
+                <Link key={el.id} href={`/${pathMap[type]}/${el.id}`} className="w-full group flex flex-col items-center justify-between gap-3 rounded-xl border border-gray-200 bg-white p-4 transition hover:border-[var(--color04)] hover:shadow-md md:flex-row">
                     {/* 왼쪽 */}
-                    <span className="text-base font-semibold text-gray-900 transition group-hover:text-[#8FD3C3]">{el.title}</span>
+                    <span className="text-base font-semibold text-gray-900 transition group-hover:text-[var(--color04)]">{el.title}</span>
 
                     {/* 오른쪽 */}
                     <span className="flex flex-col shrink-0 text-xs text-gray-400">{new Date(el.createdAt).toLocaleDateString()}</span>

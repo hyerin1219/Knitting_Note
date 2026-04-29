@@ -1,4 +1,4 @@
-import { CrochetSymbol } from '@/lib';
+import { CROCHETSYMBOL } from '@/lib';
 
 interface IProps {
     clickEvent: any;
@@ -7,7 +7,7 @@ interface IProps {
 export default function SelectCrochetSymbol({ clickEvent }: IProps) {
     return (
         <>
-            {CrochetSymbol.map((el) => (
+            {CROCHETSYMBOL.map((el) => (
                 <button
                     type="button"
                     onClick={(e) => {

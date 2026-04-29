@@ -50,6 +50,10 @@ export default function GridPatternsDetail() {
 
     if (!pattern) return null;
 
+    // 1차원 배열을 2차원으로 복원하는 로직 추가
+
+    const items2D = pattern.items && pattern.gridWidth ? Array.from({ length: Math.ceil(pattern.items.length / pattern.gridWidth) }, (_, i) => pattern.items.slice(i * pattern.gridWidth, (i + 1) * pattern.gridWidth)) : [];
+
     return (
         <section className="Content ">
             {/* 상단 카드 */}
@@ -61,7 +65,7 @@ export default function GridPatternsDetail() {
             <div className="mt-6 space-y-3 min-h-155">
                 <div className="overflow-x-auto ">
                     <div className="shadow-md bg-white ring-1 ring-gray-200">
-                        {pattern.items.map((row, rIdx) => {
+                        {items2D.map((row, rIdx) => {
                             const isDone = completedIds.includes(String(rIdx));
 
                             return (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 
@@ -35,7 +35,7 @@ export default function PatternsWriteGird({ mode, id }: IWriteProps) {
                 if (snap.exists()) {
                     const data = snap.data();
 
-                    setTitle(title);
+                    setTitle(data.title);
                     setItems(data.items);
                 }
             };
@@ -44,10 +44,14 @@ export default function PatternsWriteGird({ mode, id }: IWriteProps) {
         }
     }, [mode, id]);
 
+    const handleSetItems = useCallback((newItems: IPatternGridItem[][]) => {
+        setItems(newItems);
+    }, []);
+
     // 등록 하기
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+        console.log('제출 시작');
         if (!uid) return;
 
         try {
@@ -63,7 +67,10 @@ export default function PatternsWriteGird({ mode, id }: IWriteProps) {
                 router.push(`/gridPatterns/${id}`);
             } else {
                 // 등록
-
+                if (!title) {
+                    triggerAlert('제목을 입력해 주세요!');
+                    return;
+                }
                 //  2차원 배열 items을 1차원
                 const flattenedItems = items.flat();
                 //  items의 가로 길이 저장
@@ -100,7 +107,7 @@ export default function PatternsWriteGird({ mode, id }: IWriteProps) {
                     <div className="">
                         <p className="mb-2">도안</p>
 
-                        <WriteGridPattern items={items} setItems={setItems} />
+                        <WriteGridPattern items={items} setItems={handleSetItems} />
                     </div>
 
                     {/* 버튼 */}

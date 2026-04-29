@@ -1,11 +1,11 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react';
 import ColorBox from '@/components/ui/colorBox';
 import SelectCrochetSymbol from '@/components/ui/selectCrochetSymbol';
 import { IPatternGridItem } from '@/types';
 
 type IProps = {
     items: IPatternGridItem[][];
-    setItems: Dispatch<SetStateAction<IPatternGridItem[][]>>;
+    setItems: (newItems: IPatternGridItem[][]) => void;
 };
 
 export default function WriteGridPattern({ setItems }: IProps) {
@@ -40,54 +40,58 @@ export default function WriteGridPattern({ setItems }: IProps) {
     );
 
     // 행 추가
-    const addRow = () => {
-        const newRow = Array(grid[0].length).fill(null).map(CreateEmptyCell);
-        setGrid([...grid, newRow]);
-    };
-
+    const addRow = useCallback(() => {
+        setGrid((prev) => {
+            const newRow = Array(prev[0].length).fill(null).map(CreateEmptyCell);
+            return [...prev, newRow];
+        });
+    }, []);
     // 열 추가
-    const addCol = () => {
-        setGrid(grid.map((row) => [...row, CreateEmptyCell()]));
-    };
+    const addCol = useCallback(() => {
+        setGrid((prev) => prev.map((row) => [...row, CreateEmptyCell()]));
+    }, []);
 
     // 색상을 바꿀 때 실행할 함수
-    const handleColorChange = (newColor: string) => {
+    const handleColorChange = useCallback((newColor: string) => {
         setColor(newColor);
-        setTool('paint'); // 색칠 모드
-    };
+        setTool('paint');
+    }, []);
 
     // 기호를 바꿀 때 실행할 함수
-    const handleSymbolChange = (newSymbol: string) => {
+    const handleSymbolChange = useCallback((newSymbol: string) => {
         setSymbol(newSymbol);
-        setTool('stitch'); // 기호 모드
-    };
+        setTool('stitch');
+    }, []);
 
-    // 칸 클릭 시 상태 변경
-    const handleCell = (rIdx: number, cIdx: number) => {
-        const newGrid = [...grid];
-        const targetCell = { ...newGrid[rIdx][cIdx] };
+    // 칸 클릭 시 상태 변경 (깊은 복사, 불필요한 리랜더링 방지를 위한 useCallback)
+    const handleCell = useCallback(
+        (rIdx: number, cIdx: number) => {
+            setGrid((prevGrid) => {
+                const newGrid = prevGrid.map((row) => [...row]);
+                const targetCell = { ...newGrid[rIdx][cIdx] };
 
-        if (tool === 'paint') {
-            // 색칠 모드: 배경색 업데이트 (있으면 하얀색)
-            targetCell.color = targetCell.color === color ? '#ffffff' : color;
-        } else {
-            // 기호 모드: 기호 업데이트 (있으면 제거)
-            targetCell.symbol = targetCell.symbol === symbol ? null : symbol;
-        }
+                if (tool === 'paint') {
+                    targetCell.color = targetCell.color === color ? '#ffffff' : color;
+                } else {
+                    targetCell.symbol = targetCell.symbol === symbol ? null : symbol;
+                }
 
-        newGrid[rIdx][cIdx] = targetCell;
-        setGrid(newGrid);
-    };
+                newGrid[rIdx][cIdx] = targetCell;
+                return newGrid;
+            });
+        },
+        [tool, color, symbol]
+    ); // tool, color, symbol이 바뀔 때만 함수 갱신
 
     // 초기화
-    const handleReset = () => {
+    const handleReset = useCallback(() => {
         setGrid(
             Array(5)
                 .fill(null)
                 .map(() => Array(5).fill(null).map(CreateEmptyCell))
         );
-    };
-    console.log(grid);
+    }, []);
+
     useEffect(() => {
         setItems(grid);
     }, [grid, setItems]);
@@ -140,7 +144,7 @@ export default function WriteGridPattern({ setItems }: IProps) {
                                 role="button"
                                 className="flex items-center justify-center  w-[25px] h-[25px] border border-[#ccc] p-1 cursor-pointer"
                                 key={cell.id}
-                                onClick={() => handleCell(rIdx, cIdx)}
+                                // onClick={() => handleCell(rIdx, cIdx)}
                                 style={{
                                     backgroundColor: cell.color,
                                 }}

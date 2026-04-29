@@ -5,6 +5,7 @@ import PatternList from '@/components/ui/patternList';
 import { useImagePattern } from '@/hooks/useImagePattern';
 import { usePattern } from '@/hooks/usePattern';
 import { useGridPattern } from '@/hooks/useGridPattern';
+import { Plus } from 'lucide-react';
 
 export default function Main() {
     const { data, loading } = usePattern();
@@ -17,13 +18,16 @@ export default function Main() {
 
             {/* 버튼 모음 */}
             <div className="flex items-center gap-3 mb-8">
-                <Link className="bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97] h-10 px-4 py-2 rounded-lg" href="/patterns/write">
+                <Link className="flex items-center gap-1 bg-[var(--color02)] text-white shadow-md hover:bg-[var(--color03)] active:scale-[0.97] h-10 px-4 py-2 rounded-lg" href="/patterns/write">
+                    <Plus size={20} />
                     서술 도안 작성하기
                 </Link>
-                <Link className="bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97] h-10 px-4 py-2 rounded-lg" href="/imagePatterns/write">
+                <Link className="flex items-center gap-1 bg-[var(--color02)] text-white shadow-md hover:bg-[var(--color03)] active:scale-[0.97] h-10 px-4 py-2 rounded-lg" href="/imagePatterns/write">
+                    <Plus size={20} />
                     기호 도안 작성하기
                 </Link>
-                <Link className="bg-[#8FD3C3] text-white shadow-md hover:bg-[#7fcbbb] active:scale-[0.97] h-10 px-4 py-2 rounded-lg" href="/gridPatterns/write">
+                <Link className="flex items-center gap-1 bg-[var(--color02)] text-white shadow-md hover:bg-[var(--color03)] active:scale-[0.97] h-10 px-4 py-2 rounded-lg" href="/gridPatterns/write">
+                    <Plus size={20} />
                     배색 도안 작성하기
                 </Link>
             </div>

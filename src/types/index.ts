@@ -61,7 +61,8 @@ export type IGirdPattern = {
     title: string;
     createdAt: string;
     gridWidth: number;
-    items: IPatternGridItem[][];
+    items: IPatternGridItem[];
+    // items: IPatternGridItem[][];
 
     completedIds: string[];
 };

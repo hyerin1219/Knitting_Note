@@ -18,8 +18,10 @@ export default function Header() {
                             <span className="block h-1 rounded bg-black"></span>
                             <span className="block h-1 rounded bg-black"></span>
                         </button>
-                        <h1 className="text-[25px]">
-                            <Link href="/">Knitting Note</Link>
+                        <h1 className="w-30">
+                            <Link href="/">
+                                <img src="/images/logo.png" alt="stitch note" />
+                            </Link>
                         </h1>
                     </div>
                     {user ? (

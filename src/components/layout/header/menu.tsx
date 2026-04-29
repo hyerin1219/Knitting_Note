@@ -62,7 +62,7 @@ export default function Menu({ open, onClose }: IProps) {
                     <ul className="mt-4 space-y-2 w-full">
                         {menus.map((menu) => (
                             <li key={menu.href}>
-                                <Link onClick={onClose} href={menu.href} className="block w-full text-xl hover:bg-[#d3e7e2] p-2">
+                                <Link onClick={onClose} href={menu.href} className="block w-full text-xl hover:bg-[var(--color02)] p-2">
                                     {menu.label}
                                 </Link>
 

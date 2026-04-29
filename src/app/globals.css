@@ -9,11 +9,14 @@
 }
 
 :root {
-    --color01: #d3e7e2;
-    --color02: #bae0d6;
-    --color03: #8fd3c3;
-    --color04: #6bae9e;
-    --color04: #263c37;
+    /* background color */
+    --color01: #fefbe8;
+    /* button color */
+    --color02: #f4d2b6;
+    /* button hover color */
+    --color03: #ffc392;
+    --color04: #bcd5e6;
+    --color05: #d3e7e2;
 }
 
 body {

@@ -1,5 +1,5 @@
-import Main from '@/components/units/main';
+import DashBoard from '@/components/units/dashBoard';
 
 export default function Home() {
-    return <Main />;
+    return <DashBoard />;
 }
