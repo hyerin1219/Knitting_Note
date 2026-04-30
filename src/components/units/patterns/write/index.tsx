@@ -33,27 +33,27 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
     const router = useRouter();
 
     useEffect(() => {
+        // 로그인 체크: 렌더링 중이 아니라 useEffect 안에서 실행
+        if (!uid) return;
+
         if (mode === 'edit' && id) {
             const fetchData = async () => {
-                const docRef = doc(db, 'patterns', id);
+                const docRef = doc(db, 'users', uid, 'Patterns', id);
                 const snap = await getDoc(docRef);
 
                 if (snap.exists()) {
                     const data = snap.data();
-
                     setForm({
                         title: data.title || '',
                         content: data.content || '',
                         category: data.category || '',
                     });
-
                     setItems(data.items || []);
                 }
             };
-
             fetchData();
         }
-    }, [mode, id]);
+    }, [mode, id, uid]); // uid 의존성 추가
 
     // 등록 수정 하기
     const handleSubmit = async (e: React.FormEvent) => {
@@ -69,7 +69,7 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
         try {
             // 수정
             if (mode === 'edit' && id) {
-                const docRef = doc(db, 'patterns', id);
+                const docRef = doc(db, 'users', uid, 'Patterns', id);
 
                 await updateDoc(docRef, {
                     ...form,
@@ -79,7 +79,7 @@ export default function PatternsWrite({ mode, id }: IWriteProps) {
                 router.push(`/patterns/${id}`);
             } else {
                 // 등록
-                const patternRef = collection(db, 'patterns');
+                const patternRef = collection(db, 'users', uid, 'Patterns');
 
                 const docRef = await addDoc(patternRef, {
                     author: uid,

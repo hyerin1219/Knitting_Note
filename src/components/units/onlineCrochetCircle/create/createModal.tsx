@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { useAlert } from '@/hooks/useAlert';
 import { useAuth } from '@/hooks/useAuth';
 import { db } from '@/lib/firebase';
+import { useUserStore } from '@/store/useUserStore';
 import { ICrochetCircleItem } from '@/types';
 import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -18,7 +19,8 @@ interface IProps {
 }
 export default function OnlineCrochetCircleCreateModal({ isOpen, setIsOpen, dialogRef }: IProps) {
     const router = useRouter();
-    const { uid, user } = useAuth();
+
+    const { userInfo } = useUserStore();
     const [room, setRoom] = useState({
         title: '',
         passwords: '',
@@ -30,7 +32,7 @@ export default function OnlineCrochetCircleCreateModal({ isOpen, setIsOpen, dial
 
     // 방 만들기 로직
     const handleCreate = async () => {
-        if (!uid) return;
+        if (!userInfo) return;
         if (!room.title || !room.passwords) {
             // triggerAlert('모든 칸을 입력해주세요.');
             return;
@@ -39,9 +41,9 @@ export default function OnlineCrochetCircleCreateModal({ isOpen, setIsOpen, dial
         try {
             const crochetCircle = collection(db, 'CrochetCircles');
             const docRef = await addDoc(crochetCircle, {
-                roomManager: uid,
+                roomManager: userInfo.uid,
                 ...room,
-                member: [uid],
+                member: [userInfo],
                 memberCount: 1,
                 createdAt: new Date().toLocaleDateString(),
             });

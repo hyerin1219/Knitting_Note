@@ -33,9 +33,11 @@ export default function PatternsWriteImage({ mode, id }: IWriteProps) {
     const router = useRouter();
 
     useEffect(() => {
+        if (!uid) return;
+
         if (mode === 'edit' && id) {
             const fetchData = async () => {
-                const docRef = doc(db, 'ImagePatterns', id);
+                const docRef = doc(db, 'users', uid, 'ImagePatterns', id);
                 const snap = await getDoc(docRef);
 
                 if (snap.exists()) {
@@ -53,7 +55,7 @@ export default function PatternsWriteImage({ mode, id }: IWriteProps) {
 
             fetchData();
         }
-    }, [mode, id]);
+    }, [mode, id, uid]);
 
     // 등록 하기
     const handleSubmit = async (e: React.FormEvent) => {
@@ -69,7 +71,7 @@ export default function PatternsWriteImage({ mode, id }: IWriteProps) {
         try {
             // 수정
             if (mode === 'edit' && id) {
-                const docRef = doc(db, 'ImagePatterns', id);
+                const docRef = doc(db, 'users', uid, 'ImagePatterns', id);
 
                 await updateDoc(docRef, {
                     ...form,
@@ -80,7 +82,7 @@ export default function PatternsWriteImage({ mode, id }: IWriteProps) {
             } else {
                 // 등록
 
-                const patternRef = collection(db, 'ImagePatterns');
+                const patternRef = collection(db, 'users', uid, 'ImagePatterns');
 
                 const docRef = await addDoc(patternRef, {
                     author: uid,

@@ -27,9 +27,11 @@ export default function PatternsWriteGird({ mode, id }: IWriteProps) {
     const router = useRouter();
 
     useEffect(() => {
+        if (!uid) return;
+
         if (mode === 'edit' && id) {
             const fetchData = async () => {
-                const docRef = doc(db, 'GridPatterns', id);
+                const docRef = doc(db, 'users', uid, 'GridPatterns', id);
                 const snap = await getDoc(docRef);
 
                 if (snap.exists()) {
@@ -51,13 +53,13 @@ export default function PatternsWriteGird({ mode, id }: IWriteProps) {
     // 등록 하기
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log('제출 시작');
+
         if (!uid) return;
 
         try {
             // 수정
             if (mode === 'edit' && id) {
-                const docRef = doc(db, 'GridPatterns', id);
+                const docRef = doc(db, 'users', uid, 'GridPatterns', id);
 
                 await updateDoc(docRef, {
                     title,
@@ -76,7 +78,7 @@ export default function PatternsWriteGird({ mode, id }: IWriteProps) {
                 //  items의 가로 길이 저장
                 const gridWidth = items[0].length;
 
-                const patternRef = collection(db, 'GridPatterns');
+                const patternRef = collection(db, 'users', uid, 'GridPatterns');
 
                 const docRef = await addDoc(patternRef, {
                     author: uid,
