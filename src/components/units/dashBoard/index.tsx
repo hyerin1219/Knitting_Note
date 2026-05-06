@@ -17,9 +17,9 @@ export default function DashBoard() {
     const [selectedChar, setSelectedChar] = useState<string>(CHARACTER[0]?.value);
     const [nickName, setNickName] = useState('');
     const { showAlert, alertValue, triggerAlert } = useAlert();
-    const router = useRouter();
+    // const router = useRouter();
 
-    const { setUserInfo } = useUserStore();
+    // const { setUserInfo } = useUserStore();
 
     // 캐릭터 생성 로직
     const handleCreateUser = async (e: React.FormEvent) => {
@@ -39,7 +39,7 @@ export default function DashBoard() {
             const userDocRef = doc(db, 'users', uid);
 
             const userData = {
-                user: uid,
+                uid,
                 nickName,
                 character: selectedChar,
                 createdAt: new Date().toLocaleDateString(),
@@ -47,7 +47,7 @@ export default function DashBoard() {
 
             await setDoc(userDocRef, userData);
 
-            setUserInfo(userData);
+            // setUserInfo(userData);
 
             // router.push(`/main`);
         } catch (error) {

@@ -1,21 +1,18 @@
 'use client';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useState } from 'react';
 import { useParams } from 'next/navigation';
-import { doc, updateDoc } from 'firebase/firestore';
-
-import { Button } from '@/components/ui/button';
 import { db } from '@/lib/firebase';
+
 import { useAuth } from '@/hooks/useAuth';
 import { useCrochetCircleDetail } from '@/hooks/useCrochetCircle';
-import { Input } from '@/components/ui/input';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 
 export default function OnlineCrochetCircleDetail() {
     const params = useParams();
     const id = params?.id as string;
-    const { user, uid } = useAuth();
+    const { uid } = useAuth();
     const { crochetCircle, loading } = useCrochetCircleDetail(id);
-
+    const currentUser = useCurrentUser();
     const [input, setInput] = useState('');
 
     const sendMessage = async () => {
@@ -27,42 +24,75 @@ export default function OnlineCrochetCircleDetail() {
                 text: input,
                 roomId: crochetCircle?.id,
                 senderId: uid,
-                // senderName: '치즈고양이',
-                // senderImage: '/images/cat_profile.png',
             }),
         });
 
         setInput(''); // 입력창 초기화
     };
 
-    if (!crochetCircle) return;
+    if (!crochetCircle || !currentUser) return;
+
     return (
         <section className="Content ">
             <h2 className="Title">{crochetCircle.title}</h2>
-            <div>
-                <span>뜨개방 개설일 : {crochetCircle.createdAt}</span>
-                <span>뜨개방 인원 : {crochetCircle.memberCount}명</span>
+
+            {/* 우리방 정보 */}
+            <div className="relative group inline-block">
+                {/* 트리거 */}
+                <button className="px-3 py-1 text-sm bg-[var(--color04)] text-white rounded-full shadow hover:scale-105 transition">우리방 정보</button>
+
+                {/* 툴팁 카드 */}
+                <div className="absolute left-0 top-10  opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-200 z-2">
+                    <div className="bg-white border border-gray-200 rounded-xl shadow-lg px-4 py-3 min-w-[180px] text-sm text-gray-700 backdrop-blur-md">
+                        <p className="font-semibold  mb-2">📌 우리방 정보</p>
+
+                        <div className="flex flex-col gap-1">
+                            <span>개설일: {crochetCircle.createdAt}</span>
+                            <span>인원: {crochetCircle.memberCount}명</span>
+                            <span>방장: {crochetCircle.roomManager.nickName}</span>
+                        </div>
+
+                        {/* 화살표 */}
+                        <div className="absolute -top-[7px] left-4  w-3 h-3 bg-white border-l border-t border-gray-200 rotate-45"></div>
+                    </div>
+                </div>
             </div>
 
             <article className="relative w-full">
-                <img className="absolute left-1/2 top-[-50px] -translate-x-1/2 w-50 opacity-80" src="/images/img_lamp.png" alt="조명" />
+                <img className="absolute left-1/2 top-[-50px] -translate-x-1/2 w-50 opacity-80 z-1" src="/images/img_lamp.png" alt="조명" />
 
                 {/* 채팅 내역 */}
-                <div className="relative w-full h-130 border border-3 rounded-xl overflow-hidden mt-5 p-3 ">
+                <div className="relative w-full h-130 border border-3 border-[var(--color04)] rounded-xl overflow-hidden mt-5 p-3 ">
                     <div className="w-full h-full overflow-y-auto">
                         <img className="absolute bottom-[-700px] w-full opacity-80" src="/images/img_desk2.png" alt="책상" />
                     </div>
                 </div>
 
-                {/* 채팅창 */}
-                <div className="flex items-center justify-center gap-2 mt-8">
-                    <div className="flex items-center justify-center gap-2 w-full ">
-                        <Input type="text" variant="full" placeholder="채팅을 입력하세요." value={input} onChange={(e) => setInput(e.target.value)} />
-                        <Button onClick={sendMessage}>입력</Button>
-                    </div>
+                {/* 채팅 입력 영역 */}
+                <div className="mt-5">
+                    <div className="flex items-center gap-3 bg-white/90 backdrop-blur-md border border-2 border-[var(--color04)] rounded-full px-4 py-2 shadow-lg">
+                        {/* 캐릭터 */}
+                        <div className="text-center">
+                            <img src={`/images/char/char_${currentUser.character}.png`} alt="character" className="w-12 h-12 h-full object-contain" />
+                            <p>{currentUser.nickName}</p>
+                        </div>
 
-                    <div className="relative shrink-0 w-30 h-30 rounded-full bg-[var(--color01)] shadow-md p-3">
-                        <img className="w-full h-full object-contain" src={`/images/char/char_cat.png`} alt="캐릭터" />
+                        {/* 입력창 */}
+                        <input
+                            type="text"
+                            placeholder="메시지를 입력하세요..."
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') sendMessage();
+                            }}
+                            className="flex-1 bg-transparent outline-none px-2 "
+                        />
+
+                        {/* 전송 버튼 */}
+                        <button onClick={sendMessage} disabled={!input.trim()} className="flex items-center justify-center w-9 h-9 rounded-full bg-[var(--color04)] text-white  hover:scale-110 active:scale-95 transition">
+                            ➤
+                        </button>
                     </div>
                 </div>
             </article>

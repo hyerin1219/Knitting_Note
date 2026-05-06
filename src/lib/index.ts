@@ -1,3 +1,7 @@
+import { useAuth } from '@/hooks/useAuth';
+import { useUserStore } from '@/store/useUserStore';
+import { useMemo } from 'react';
+
 // 카테고리
 export const CATEGORIES = [
     { value: 'clothing', label: '의류' },

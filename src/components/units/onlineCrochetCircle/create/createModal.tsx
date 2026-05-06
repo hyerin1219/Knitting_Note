@@ -1,26 +1,23 @@
 'use client';
-import Alert from '@/components/ui/alert';
+
+import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useAlert } from '@/hooks/useAlert';
-import { useAuth } from '@/hooks/useAuth';
 import { db } from '@/lib/firebase';
-import { useUserStore } from '@/store/useUserStore';
-import { ICrochetCircleItem } from '@/types';
-import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
+import { ICrochetCircleItem, IUserInfo } from '@/types';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
-import { Dispatch, RefObject, SetStateAction, useEffect, useRef, useState } from 'react';
 
 interface IProps {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
     dialogRef: RefObject<HTMLDialogElement | null>;
+    currentUser: IUserInfo | undefined;
 }
-export default function OnlineCrochetCircleCreateModal({ isOpen, setIsOpen, dialogRef }: IProps) {
+export default function OnlineCrochetCircleCreateModal({ isOpen, setIsOpen, dialogRef, currentUser }: IProps) {
     const router = useRouter();
 
-    const { userInfo } = useUserStore();
     const [room, setRoom] = useState({
         title: '',
         passwords: '',
@@ -32,7 +29,7 @@ export default function OnlineCrochetCircleCreateModal({ isOpen, setIsOpen, dial
 
     // 방 만들기 로직
     const handleCreate = async () => {
-        if (!userInfo) return;
+        if (!currentUser) return;
         if (!room.title || !room.passwords) {
             // triggerAlert('모든 칸을 입력해주세요.');
             return;
@@ -41,9 +38,9 @@ export default function OnlineCrochetCircleCreateModal({ isOpen, setIsOpen, dial
         try {
             const crochetCircle = collection(db, 'CrochetCircles');
             const docRef = await addDoc(crochetCircle, {
-                roomManager: userInfo.uid,
+                roomManager: currentUser,
                 ...room,
-                member: [userInfo],
+                member: [currentUser],
                 memberCount: 1,
                 createdAt: new Date().toLocaleDateString(),
             });

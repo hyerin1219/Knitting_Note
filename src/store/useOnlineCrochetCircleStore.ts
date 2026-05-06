@@ -3,7 +3,7 @@ import { collection, query, getDocs, orderBy, doc, getDoc } from 'firebase/fires
 import { db } from '@/lib/firebase';
 import { ICrochetCircle } from '@/types';
 
-interface CrochetCircleState {
+interface ICrochetCircleState {
     crochetCircles: ICrochetCircle[];
     loading: boolean;
 
@@ -11,7 +11,7 @@ interface CrochetCircleState {
     getCrochetCircleById: (id: string) => Promise<ICrochetCircle | null>;
 }
 
-export const useCrochetCircleStore = create<CrochetCircleState>((set, get) => ({
+export const useCrochetCircleStore = create<ICrochetCircleState>((set, get) => ({
     crochetCircles: [],
     loading: false,
 

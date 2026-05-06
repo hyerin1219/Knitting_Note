@@ -67,18 +67,27 @@ export type IGirdPattern = {
     completedIds: string[];
 };
 
+// ******************************* user type
+export interface IUserInfo {
+    id: string; // 문서 ID
+    character: string;
+    createdAt: string;
+    nickName: string;
+    uid: string;
+}
 // ******************************* 뜨개방 type
 
 export type ICrochetCircleItem = {
     title: string;
     passwords: string;
 };
+
 export type ICrochetCircle = {
-    author: string;
+    roomManager: IUserInfo;
     createdAt: string;
     id: string;
     room: ICrochetCircleItem[];
-    member: [];
+    member: IUserInfo[];
     memberCount: number;
     title: string;
     passwords: string;
